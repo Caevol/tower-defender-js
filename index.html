@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tower Defense Game!</title>
+</head>
+<body>
+
+<div id = "main-menu" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    <button id = "new-game">New Game</button> <br>
+    <button id = "credits-page">Credits</button> <br>
+    <button id = "high-scores-page">High Scores</button> <br>
+    <button id = "options-page">Options</button>
+</div>
+
+<div id = "options" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    <button id = "game-options-page">Game Options</button>
+    <button id = "keybindings-page">Keybindings</button>
+    <button id = "back-button-options">Back</button>
+</div>
+
+<div id = "game-options" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    <button id = "back-button-game-options">Back</button>
+</div>
+
+<div id = "keybindings" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    <button id = "back-button-keybindings">Back</button>
+</div>
+
+<div id = "high-scores" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    <h1><div id = "high-scores-list"></div></h1>
+    <button id="reset-scores">Reset Scores</button>
+    <button id = "back-button-scores">Back</button>
+</div>
+
+<div id = "credits" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    <h1>
+        Created by Logan Pedersen <br>
+    </h1>
+    <button id = "back-button-credits">Back</button>
+
+</div>
+
+<div id = "tower-defense" class = "screen" style = "width: 900px; height: 900px; display: none">
+    <div id = "tower-ui">
+        <button id = "Upgrade">Upgrade</button>
+        <button id = "Sell">Sell</button>
+        <button id = "tower-1">Tower 1</button>
+        <button id = "tower-2">Tower 2</button>
+        <button id = "tower-3">Tower 3</button>
+        <button id = "tower-4">Tower 4</button>
+    </div>
+    <canvas id ="tower-game" class = "screen" width = "1500" height = "1500" style = "width: 900px; height: 900px">
+
+    </canvas>
+</div>
+
+</body>
+
+
+<script data-main = "scripts/resources/loader" src = "scripts/resources/require.js"></script>
+
+
+</html>
