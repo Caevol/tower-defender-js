@@ -31,6 +31,10 @@ MyGame.loader = (function() {
                 message: 'Input loaded',
                 onComplete: null
             }, {
+                scripts: ['../utility/PriorityQueue', '../utility/pathfinder'],
+                message: 'Utilites loaded',
+                onComplete: null
+            }, {
                 scripts: ['../game/TowerDefense'],
                 message: 'Game State Loaded',
                 onComplete: null
