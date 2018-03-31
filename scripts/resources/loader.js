@@ -21,39 +21,34 @@ MyGame.loader = (function() {
                 scripts: ['../pages/menuSystem'],
                 message: 'Menu System Loaded',
                 onComplete: null,
-            },
-            {
-                scripts: ['../pages/tower-defense', '../pages/options', '../pages/credits', '../pages/game-options', '../pages/high-scores', '../pages/keybindings', '../pages/main-menu'],
-                message: 'Page scripts loaded',
-                onComplete: null,
             }, {
                 scripts: ['../input/input'],
                 message: 'Input loaded',
                 onComplete: null
             }, {
-                scripts: ['../utility/PriorityQueue', '../utility/pathfinder'],
-                message: 'Utilites loaded',
+                scripts: ['../pages/tower-defense', '../pages/options', '../pages/credits', '../pages/game-options', '../pages/high-scores', '../pages/keybindings', '../pages/main-menu'],
+                message: 'Page scripts loaded',
+                onComplete: null,
+            }, {
+                scripts: ['../utility/PriorityQueue'],
+                message: 'PriorityQueue loaded',
                 onComplete: null
             }, {
-                scripts: ['../game/TowerDefense'],
+                scripts: ['../game/gameRenderer'],
+                message: 'Renderer loaded',
+                onComplete: null
+            }, {
+                scripts: ['../game/TowerDefense', '../utility/pathfinder'],
                 message: 'Game State Loaded',
                 onComplete: null
             }
             ],
         assetOrder = [
-            /**
             {
-            key: 'player-self',
-            source: 'assets/playerShip1_blue.png'
-        }, {
-            key: 'player-other',
-            source: 'assets/playerShip1_red.png'
-        }, {
-            key: 'explosion',
-            source: 'assets/explosion.png'
-        }
-             */
-            ]; //no assets yet
+            key: 'maskman',
+            source: '../../assets/monsters/maskman-png-copy.png'
+            }
+        ]; //no assets yet
 
     //------------------------------------------------------------------
     //

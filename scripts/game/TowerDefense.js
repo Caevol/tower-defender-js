@@ -1,23 +1,101 @@
-
-Game = (function(graphics) {
+Game = function (graphics) {
 
     const BOARD_SIZE = 50;
+    const MONSTER_THRESHOLD = .3;
     let gameState = {};
+    const BACKGROUND = [];
 
-    function Tile(occ){
+    let maskCreep = {
+        spec : {
+            elapsedTime : 0,
+            asset : MyGame.assets['maskman'],
+            spriteNum : 0,
+            spriteCount : 9,
+            width : MyGame.assets['maskman'].width / 9,
+            height: MyGame.assets['maskman'].height,
+            spriteTime : [100, 100, 100, 100, 100, 100, 100, 100, 100]
+        },
+        type : "Ground",
+        x : 0,
+        y : 0,
+        speed : .1,
+        path : null,
+        health : 100
+    };
+
+    function MASKMONSTER(startX, startY, endX, endY){
+        let m = Object.assign({}, maskCreep);
+        m.x = startX;
+        m.y = startY;
+        m.end = {x: endX, y: endY};
+        m.path = Pathfinder.getPath(m.x, m.y, m.end.x, m.end.y, gameState.tileBoard);
+        return m;
+    }
+
+    function updateMonsters(elapsedTime){
+        let keepers = [];
+        for(let i = 0; i < gameState.monsters.length; i ++){
+            let m = gameState.monsters[i];
+
+            //update sprite info
+            m.spec.elapsedTime += elapsedTime;
+            if(m.spec.elapsedTime >= m.spec.spriteTime[m.spec.spriteNum]){
+                m.spec.elapsedTime -= m.spec.spriteTime[m.spec.spriteNum];
+                m.spec.spriteNum += 1;
+                m.spec.spriteNum = m.spec.spriteNum % m.spec.spriteCount;
+            }
+
+            //move monster
+            if(m.type === "Ground" ) {
+
+                let dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
+                if (dist < MONSTER_THRESHOLD) {
+
+
+                    if (m.path.nxt === undefined) {
+                        //Monster made it to objective, hit board
+                        gameState.lives -= 1;
+                        continue;
+                        //delete monster
+                    }
+                    else {
+                        m.path = m.path.nxt;
+                    }
+                }
+
+                let vector = {
+                    x : m.path.x - m.x,
+                    y : m.path.y - m.y
+                };
+
+                dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
+                vector.x /= dist;
+                vector.y /= dist;
+
+                m.x += vector.x * m.speed;
+                m.y += vector.y * m.speed;
+
+                keepers.push(m);
+            }
+        }
+        gameState.monsters = keepers;
+    }
+
+
+    function Tile(occ) {
         return {
             occupied: occ   //bool
         }
     }
 
-    function getGameState(){
+    function getGameState() {
         return gameState;
     }
 
-    function pointIsOccupied(x, y){
+    function pointIsOccupied(x, y) {
         const LEGAL_POINTS = [BOARD_SIZE / 2 - 2, BOARD_SIZE / 2 - 1, BOARD_SIZE / 2, BOARD_SIZE / 2 + 1];
         if (x == 0 || y == 0 || x == BOARD_SIZE - 1 || y == BOARD_SIZE - 1) {
-            if(LEGAL_POINTS.indexOf(x) == -1 && LEGAL_POINTS.indexOf(y) == -1) {
+            if (LEGAL_POINTS.indexOf(x) == -1 && LEGAL_POINTS.indexOf(y) == -1) {
                 return true
             }
         }
@@ -29,14 +107,13 @@ Game = (function(graphics) {
 
         for (let y = 0; y < sizeY; y++) {
             let row = [];
-            for (let x = 0; x < sizeX; x++){
+            for (let x = 0; x < sizeX; x++) {
                 row.push(Tile(pointIsOccupied(x, y)));
             }
             tileBoard.push(row);
         }
         return tileBoard;
     }
-
 
     function rebuildGame() {
         gameState = {
@@ -46,28 +123,71 @@ Game = (function(graphics) {
             waves: [],
             monsters: [],
             money: 150,
+            lives: 100,
             waveComplete: true,
             tileBoard: TileBoard(BOARD_SIZE, BOARD_SIZE),
-            continueGame: true
-        }
+            continueGame: true,
+            prevTime: performance.now(),
+        };
 
+        gameState.monsters.push(MASKMONSTER(15, 3, 45, 48));
+
+        gameLoop(performance.now() - gameState.prevTime);
+    }
+
+    function drawMonsters(elapsedTime){
+        for(let i = 0; i < gameState.monsters.length; i++){
+            Renderer.drawMonster(gameState.monsters[i]);
+        }
     }
 
     function endGame() {
-        continueGame = false;
+        gameState.continueGame = false;
     }
 
+    function processInput(elapsedTime) {
+        Keyboard.update(elapsedTime);
+        Mouse.update(elapsedTime);
+    }
 
-    function gameLoop(elapsedTime) {
-        if(gameState.continueGame === false){
+    function gameLoop() {
+
+        elapsedTime = performance.now() - gameState.prevTime;
+        gameState.prevTime += elapsedTime;
+
+        if (gameState.continueGame === false) {
             return;
         }
 
-        //process input
-        //update game model
-        //render
+        if (elapsedTime > 100) { //1 second lag, skip and pretend it never happened
+            requestAnimationFrame(gameLoop);
+            return;
+        }
+
+
+        processInput(elapsedTime);
+        update(elapsedTime);
+        render(elapsedTime);
+
+        requestAnimationFrame(gameLoop);
+
     }
 
+    function render(elapsedTime) {
+        Renderer.clear();
+        //draw Background
+        //drawTowers
+        drawMonsters(elapsedTime);
+        //drawProjectiles
+        //drawParticles
+    }
+
+    function update() {
+        //update Towers
+        updateMonsters(elapsedTime);
+        //update projectiles
+        //update particles
+    }
 
     return {
         gameLoop: gameLoop,
@@ -76,4 +196,4 @@ Game = (function(graphics) {
         gameState: getGameState
     }
 
-}(GameGraphics));
+}(GameGraphics);
