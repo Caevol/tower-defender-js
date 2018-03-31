@@ -6,6 +6,8 @@ Game = function (graphics) {
     let gameState = {};
     const BACKGROUND = [];
 
+
+
     function Monster(startX, startY, endX, endY, creepType){
         let m = {};
         switch(creepType){
@@ -84,7 +86,6 @@ Game = function (graphics) {
 
     function hitMonster(damage, monster){
         monster.health -= damage;
-        console.log(monster.health);
     }
 
     function updateMonsters(elapsedTime){

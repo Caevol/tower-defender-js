@@ -53,7 +53,7 @@ let scifiturret3 = {
     },
     interior: {
         canfire : true,
-        cooldown : 100,
+        cooldown : 200,
         cooldownRemaining : 0,
         target : null
     },
