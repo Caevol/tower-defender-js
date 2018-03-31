@@ -38,7 +38,7 @@ MyGame.loader = (function() {
                 message: 'Renderer loaded',
                 onComplete: null
             }, {
-                scripts: ['../game/TowerDefense', '../utility/pathfinder'],
+                scripts: ['../game/TowerDefense', '../utility/pathfinder', '../game/prefabs'],
                 message: 'Game State Loaded',
                 onComplete: null
             }
@@ -47,6 +47,9 @@ MyGame.loader = (function() {
             {
             key: 'maskman',
             source: '../../assets/monsters/maskman-png-copy.png'
+            }, {
+                key: 'greenDemon',
+                source: '../../assets/monsters/greenDemon.png'
             }
         ]; //no assets yet
 

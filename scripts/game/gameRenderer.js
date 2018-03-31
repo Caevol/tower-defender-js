@@ -24,7 +24,7 @@ Renderer = (function(graphics){
 
         graphics.context.drawImage(
             spec.asset,
-            spec.width * spec.spriteNum, 0,
+            spec.width * spec.spriteNum, spec.offY,
             spec.width, spec.height,
             monster.x * xScale, monster.y * yScale,
             spec.width * 2, spec.height * 2

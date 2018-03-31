@@ -5,26 +5,17 @@ Game = function (graphics) {
     let gameState = {};
     const BACKGROUND = [];
 
-    let maskCreep = {
-        spec : {
-            elapsedTime : 0,
-            asset : MyGame.assets['maskman'],
-            spriteNum : 0,
-            spriteCount : 9,
-            width : MyGame.assets['maskman'].width / 9,
-            height: MyGame.assets['maskman'].height,
-            spriteTime : [100, 100, 100, 100, 100, 100, 100, 100, 100]
-        },
-        type : "Ground",
-        x : 0,
-        y : 0,
-        speed : .1,
-        path : null,
-        health : 100
-    };
+    function Monster(startX, startY, endX, endY, creepType){
+        let m = {};
+        switch(creepType){
+            case "mask":
+                m = Object.assign({}, maskCreep);
+                break;
+            case "greenDemon":
+                m = Object.assign({}, greenWalkingCreep);
+                break;
+        }
 
-    function MASKMONSTER(startX, startY, endX, endY){
-        let m = Object.assign({}, maskCreep);
         m.x = startX;
         m.y = startY;
         m.end = {x: endX, y: endY};
@@ -130,7 +121,9 @@ Game = function (graphics) {
             prevTime: performance.now(),
         };
 
-        gameState.monsters.push(MASKMONSTER(15, 3, 45, 48));
+        gameState.monsters.push(Monster(15, 3, 45, 48, "mask"));
+        gameState.monsters.push(Monster(15, 26, 3, 7, "greenDemon"));
+
 
         gameLoop(performance.now() - gameState.prevTime);
     }
