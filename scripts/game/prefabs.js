@@ -35,3 +35,37 @@ let greenWalkingCreep = {
     path : null,
     health : 250
 };
+
+let scifiturret3 = {
+    spec : {
+        asset : MyGame.assets['greyTurret'],
+        basePosX : 175,
+        basePosY : 75,
+        turretPosX : 288,
+        turretPosY : 93,
+        bheight : 80,
+        bwidth: 80,
+        theight : 75,
+        twidth: 65,
+        rotationOffset: Math.PI / 2
+    },
+    interior: {
+        canfire : true,
+        cooldown : 100,
+        cooldownRemaining : 0,
+        target : null
+    },
+
+    x : 0,
+    y : 0,
+    range: 10,
+    rotation: 0,
+    rotationSpeed : .003,
+    size : 3,
+    upgradeCost : 100,
+    sellval : 50,
+    purchaseCost : 75,
+    projectile: null, //update
+    upgradeTower : null
+};
+

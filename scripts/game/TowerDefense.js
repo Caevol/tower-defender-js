@@ -2,6 +2,7 @@ Game = function (graphics) {
 
     const BOARD_SIZE = 50;
     const MONSTER_THRESHOLD = .3;
+    const TURRET_THRESHOLD = .1;
     let gameState = {};
     const BACKGROUND = [];
 
@@ -21,6 +22,18 @@ Game = function (graphics) {
         m.end = {x: endX, y: endY};
         m.path = Pathfinder.getPath(m.x, m.y, m.end.x, m.end.y, gameState.tileBoard);
         return m;
+    }
+
+    function Turret(x, y, towerType){
+        let t = {};
+        switch(towerType) {
+            case "scifi3":
+                t = Object.assign({}, scifiturret3);
+                break;
+        }
+        t.x = x;
+        t.y = y;
+        return t;
     }
 
     function updateMonsters(elapsedTime){
@@ -72,6 +85,53 @@ Game = function (graphics) {
         gameState.monsters = keepers;
     }
 
+    function updateTowers(elapsedTime) {
+        //all towers turn towards target and fire, the projectiles then handle their own movement and detonation
+
+        for (let i = 0; i < gameState.turrets.length; i ++){
+            let t = gameState.turrets[i];
+
+            //update cooldown
+            if(t.interior.canfire === false) {
+                t.interior.cooldownRemaining -= elapsedTime;
+                if (t.interior.cooldownRemaining <= 0) {
+                    t.interior.canfire = true;
+                    t.interior.cooldownRemaining = t.interior.cooldown;
+                }
+            }
+
+            if(t.interior.target !== null && getDistance(t, t.interior.target) > t.range) {
+                t.interior.target = null;
+            }
+
+            //find new target
+            if(t.interior.target === null || t.interior.target.health <= 0){
+                //look for new target
+                let minDist = t.range + 1;
+                for(let n = 0; n < gameState.monsters.length; n ++){
+                    let newDist = getDistance(t, gameState.monsters[n]);
+                    if(newDist < minDist){
+                        minDist = newDist;
+                        t.interior.target = gameState.monsters[n];
+                    }
+                }
+            }
+
+            //turn towards and fire on target
+            if(t.interior.target !== null){
+                let angles = getAngle(t.rotation, t.x, t.y, t.interior.target.x, t.interior.target.y);
+                if(angles.angle < TURRET_THRESHOLD){
+                    if(t.interior.canfire){
+                        console.log("FIRE");
+                        t.interior.canfire = false;
+                    }
+                }
+                else {
+                    t.rotation += Math.sign(angles.crossProduct) * t.rotationSpeed * elapsedTime;
+                }
+            }
+        }
+    }
 
     function Tile(occ) {
         return {
@@ -91,6 +151,14 @@ Game = function (graphics) {
             }
         }
         return false
+    }
+
+    function occupySpaces(tower){
+        for(let y = tower.y; y < tower.y + tower.size; y ++){
+            for(let x = tower.x; x < tower.x + tower.size; x ++){
+                gameState.tileBoard[y][x].occupied = true;
+            }
+        }
     }
 
     function TileBoard(sizeX, sizeY) {
@@ -113,6 +181,7 @@ Game = function (graphics) {
             waveNumber: 0,
             waves: [],
             monsters: [],
+            turrets: [],
             money: 150,
             lives: 100,
             waveComplete: true,
@@ -121,8 +190,15 @@ Game = function (graphics) {
             prevTime: performance.now(),
         };
 
+        let t = Turret(25, 25, "scifi3");
+        occupySpaces(t);
+        gameState.turrets.push(t);
+
         gameState.monsters.push(Monster(15, 3, 45, 48, "mask"));
         gameState.monsters.push(Monster(15, 26, 3, 7, "greenDemon"));
+
+
+
 
 
         gameLoop(performance.now() - gameState.prevTime);
@@ -131,6 +207,15 @@ Game = function (graphics) {
     function drawMonsters(elapsedTime){
         for(let i = 0; i < gameState.monsters.length; i++){
             Renderer.drawMonster(gameState.monsters[i]);
+        }
+    }
+
+    function drawTurrets(elapsedTime){
+        for(let i = 0; i < gameState.turrets.length; i++){
+            Renderer.drawTurretBase(gameState.turrets[i]);
+        }
+        for(let i = 0; i < gameState.turrets.length; i++){
+            Renderer.drawTurretTop(gameState.turrets[i]);
         }
     }
 
@@ -168,15 +253,15 @@ Game = function (graphics) {
 
     function render(elapsedTime) {
         Renderer.clear();
-        //draw Background
-        //drawTowers
+        Renderer.drawBackground(gameState.tileBoard);
+        drawTurrets(elapsedTime);
         drawMonsters(elapsedTime);
         //drawProjectiles
         //drawParticles
     }
 
-    function update() {
-        //update Towers
+    function update(elapsedTime) {
+        updateTowers(elapsedTime)
         updateMonsters(elapsedTime);
         //update projectiles
         //update particles

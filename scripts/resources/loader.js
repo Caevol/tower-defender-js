@@ -30,26 +30,29 @@ MyGame.loader = (function() {
                 message: 'Page scripts loaded',
                 onComplete: null,
             }, {
-                scripts: ['../utility/PriorityQueue'],
-                message: 'PriorityQueue loaded',
+                scripts: ['../utility/PriorityQueue', '../utility/pathfinder', '../utility/angles'],
+                message: 'Utilities loaded',
                 onComplete: null
             }, {
                 scripts: ['../game/gameRenderer'],
                 message: 'Renderer loaded',
                 onComplete: null
             }, {
-                scripts: ['../game/TowerDefense', '../utility/pathfinder', '../game/prefabs'],
+                scripts: ['../game/TowerDefense', '../game/prefabs'],
                 message: 'Game State Loaded',
                 onComplete: null
             }
             ],
         assetOrder = [
             {
-            key: 'maskman',
-            source: '../../assets/monsters/maskman-png-copy.png'
+                key: 'maskman',
+                source: '../../assets/monsters/maskman-png-copy.png'
             }, {
                 key: 'greenDemon',
                 source: '../../assets/monsters/greenDemon.png'
+            }, {
+                key : 'greyTurret',
+                source: '../../assets/turrets/turrets.png'
             }
         ]; //no assets yet
 
