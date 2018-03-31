@@ -53,6 +53,9 @@ MyGame.loader = (function() {
             }, {
                 key : 'greyTurret',
                 source: '../../assets/turrets/turrets.png'
+            }, {
+                key : 'fireball',
+                source: '../../assets/projectiles/FireBomb.png'
             }
         ]; //no assets yet
 

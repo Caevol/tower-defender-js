@@ -36,6 +36,57 @@ Game = function (graphics) {
         return t;
     }
 
+    function Projectile(x, y, angle, projectileType){
+        let p = {};
+        switch(projectileType) {
+            case "fireball":
+                p = Object.assign({}, fireball);
+                p.update = linearProjectileUpdate;
+                p.detonate = detonateSingleTarget;
+                break;
+        }
+        p.x = x;
+        p.y = y;
+        p.angle = angle;
+        return p;
+    }
+
+    function updateProjectiles(elapsedTime){
+        let keepers = [];
+        for(let i = 0; i < gameState.projectiles.length; i ++){
+            let p = gameState.projectiles[i];
+            if(p.update(p, elapsedTime) === true){
+                keepers.push(p);
+            }
+        }
+        gameState.projectiles = keepers;
+    }
+
+    function linearProjectileUpdate(p, elapsedTime){
+        p.x += Math.cos(p.angle) * elapsedTime * p.speed;
+        p.y += Math.sin(p.angle) * elapsedTime * p.speed;
+
+        for(let n = 0; n < gameState.monsters.length; n ++){
+            let m = gameState.monsters[n];
+            let dist = Math.sqrt(Math.pow(m.x - p.x,2) + Math.pow(m.y - p.y,2));
+            if(dist <= p.radius) {
+                p.detonate(p, m);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function detonateSingleTarget(p, m){
+        hitMonster(p.damage, m);
+        // TODO: generate particles
+    }
+
+    function hitMonster(damage, monster){
+        monster.health -= damage;
+        console.log(monster.health);
+    }
+
     function updateMonsters(elapsedTime){
         let keepers = [];
         for(let i = 0; i < gameState.monsters.length; i ++){
@@ -79,7 +130,11 @@ Game = function (graphics) {
                 m.x += vector.x * m.speed;
                 m.y += vector.y * m.speed;
 
-                keepers.push(m);
+                if(m.health > 0) {
+                    keepers.push(m);
+                } else {
+                    gameState.money += m.value
+                }
             }
         }
         gameState.monsters = keepers;
@@ -122,7 +177,7 @@ Game = function (graphics) {
                 let angles = getAngle(t.rotation, t.x, t.y, t.interior.target.x, t.interior.target.y);
                 if(angles.angle < TURRET_THRESHOLD){
                     if(t.interior.canfire){
-                        console.log("FIRE");
+                        gameState.projectiles.push(Projectile(t.x, t.y, t.rotation, t.projectile));
                         t.interior.canfire = false;
                     }
                 }
@@ -182,6 +237,7 @@ Game = function (graphics) {
             waves: [],
             monsters: [],
             turrets: [],
+            projectiles: [],
             money: 150,
             lives: 100,
             waveComplete: true,
@@ -194,8 +250,16 @@ Game = function (graphics) {
         occupySpaces(t);
         gameState.turrets.push(t);
 
+        let t1 = Turret(15, 25, "scifi3");
+        occupySpaces(t1);
+        gameState.turrets.push(t1);
+
+        let t2 = Turret(35, 25, "scifi3");
+        occupySpaces(t2);
+        gameState.turrets.push(t2);
+
         gameState.monsters.push(Monster(15, 3, 45, 48, "mask"));
-        gameState.monsters.push(Monster(15, 26, 3, 7, "greenDemon"));
+        gameState.monsters.push(Monster(30, 30, 3, 7, "greenDemon"));
 
 
 
@@ -216,6 +280,12 @@ Game = function (graphics) {
         }
         for(let i = 0; i < gameState.turrets.length; i++){
             Renderer.drawTurretTop(gameState.turrets[i]);
+        }
+    }
+
+    function drawProjectiles(elapsedTime){
+        for(let i = 0; i < gameState.projectiles.length; i++){
+            Renderer.drawProjectile(gameState.projectiles[i]);
         }
     }
 
@@ -256,14 +326,14 @@ Game = function (graphics) {
         Renderer.drawBackground(gameState.tileBoard);
         drawTurrets(elapsedTime);
         drawMonsters(elapsedTime);
-        //drawProjectiles
+        drawProjectiles(elapsedTime);
         //drawParticles
     }
 
     function update(elapsedTime) {
-        updateTowers(elapsedTime)
+        updateTowers(elapsedTime);
+        updateProjectiles(elapsedTime);
         updateMonsters(elapsedTime);
-        //update projectiles
         //update particles
     }
 

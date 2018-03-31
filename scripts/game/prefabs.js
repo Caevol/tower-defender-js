@@ -14,7 +14,8 @@ let maskCreep = {
     y : 0,
     speed : .1,
     path : null,
-    health : 100
+    health : 100,
+    value : 10
 };
 
 let greenWalkingCreep = {
@@ -33,7 +34,8 @@ let greenWalkingCreep = {
     y : 0,
     speed : .05,
     path : null,
-    health : 250
+    health : 250,
+    value : 25
 };
 
 let scifiturret3 = {
@@ -65,7 +67,24 @@ let scifiturret3 = {
     upgradeCost : 100,
     sellval : 50,
     purchaseCost : 75,
-    projectile: null, //update
+    projectile: "fireball", //update
     upgradeTower : null
 };
 
+let fireball = {
+    spec : {
+        asset : MyGame.assets['fireball'],
+        width : 1.5,
+        height : 1.5,
+    },
+    x: 0,
+    y: 0,
+    angle: 0,
+    speed: .015,
+    damage: 15,
+    radius: 1.5,
+
+    update: null,
+    detonate: null
+
+};

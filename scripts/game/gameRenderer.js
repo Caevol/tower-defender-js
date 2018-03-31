@@ -31,6 +31,15 @@ Renderer = (function(graphics){
         graphics.context.restore();
     }
 
+    function drawProjectile(proj){
+
+        graphics.context.drawImage(
+            proj.spec.asset,
+            proj.x * xScale, proj.y * yScale,
+            proj.spec.width * xScale, proj.spec.height * yScale
+        )
+    }
+
     function drawTurretTop(turret){
         let spec = turret.spec;
 
@@ -79,6 +88,7 @@ Renderer = (function(graphics){
         drawMonster: drawMonster,
         drawTurretTop : drawTurretTop,
         drawTurretBase : drawTurretBase,
-        drawBackground: drawBadBackground
+        drawBackground: drawBadBackground,
+        drawProjectile: drawProjectile
     }
 }(GameGraphics));
