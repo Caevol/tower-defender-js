@@ -38,6 +38,78 @@ Game = function (graphics) {
         return t;
     }
 
+    function insertTurret(x, y){
+
+        let t = Turret(x, y, gameState.selectedTower);
+
+        console.log("VERIFY");
+        if(canPlaceTurret(t, x, y) === true){
+         //occupy space
+            occupySpaces(t);
+            console.log("OCCUPIED");
+
+            updateMonsterPaths();
+
+            Game.gameState().turrets.push(t);
+        }
+
+
+    }
+
+    //TODO: ADD CHECK THAT ALL MONSTERS CAN NAVIGATE TO EXITS
+    function canPlaceTurret(t, x, y){
+        for(let y0 = y; y0 < y + t.size; y0 ++){
+            for(let x0 = x; x0 < x + t.size; x0 ++){
+                if(gameState.tileBoard[y0][x0].occupied === true){
+                    return false;
+                }
+            }
+        }
+
+        occupySpaces(t);
+        for(let i = 0; i < gameState.monsters.length; i ++){
+            let m = gameState.monsters[i];
+            let pos = m.path;
+            while(pos.nxt !== null){
+                if(gameState.tileBoard[pos.y][pos.x].occupied === true){
+                    let p = Pathfinder.getPath(m.path.x, m.path.y, m.end.x, m.end.y, gameState.tileBoard);
+                    if(p === null){
+                        deOccupySpaces(t);
+                        return false;
+                    }
+                }
+                pos = pos.nxt;
+            }
+
+
+        }
+        deOccupySpaces(t);
+
+        return true;
+    }
+
+    function updateMonsterPaths(){
+        for(let i = 0; i < gameState.monsters.length; i ++){
+            let m = gameState.monsters[i];
+
+            let pos = m.path;
+            while(pos.nxt !== null){
+                if(gameState.tileBoard[pos.y][pos.x].occupied === true){
+                    m.path = Pathfinder.getPath(m.path.x, m.path.x, m.end.x, m.end.y, gameState.tileBoard);
+                    break;
+                }
+                pos = pos.nxt;
+            }
+
+
+
+
+            if(m.path === null) {
+                console.log("SOMETHINGS GONE WRONG, PATH FOR MONSTER IS NULL!");
+            }
+        }
+    }
+
     function Projectile(x, y, angle, projectileType){
         let p = {};
         switch(projectileType) {
@@ -107,7 +179,7 @@ Game = function (graphics) {
                 if (dist < MONSTER_THRESHOLD) {
 
 
-                    if (m.path.nxt === undefined) {
+                    if (m.path.nxt === null) {
                         //Monster made it to objective, hit board
                         gameState.lives -= 1;
                         continue;
@@ -162,6 +234,7 @@ Game = function (graphics) {
             //find new target
             if(t.target === null || t.target.health <= 0){
                 //look for new target
+                t.target = null;
                 let minDist = t.range + 1;
                 for(let n = 0; n < gameState.monsters.length; n ++){
                     let newDist = getDistance(t, gameState.monsters[n]);
@@ -216,6 +289,14 @@ Game = function (graphics) {
         }
     }
 
+    function deOccupySpaces(tower){
+        for(let y = tower.y; y < tower.y + tower.size; y ++){
+            for(let x = tower.x; x < tower.x + tower.size; x ++){
+                gameState.tileBoard[y][x].occupied = false;
+            }
+        }
+    }
+
     function TileBoard(sizeX, sizeY) {
         let tileBoard = [];
 
@@ -265,8 +346,6 @@ Game = function (graphics) {
         occupySpaces(t2);
         gameState.turrets.push(t2);
 
-        gameState.waveComplete = false;
-
     }
 
     function instantiateMonster(monsterInfo){
@@ -300,6 +379,7 @@ Game = function (graphics) {
         // Wave Complete, move to next wave and wait for player
         if(gameState.waveMonster === gameState.levelWaves[gameState.wave].length && gameState.monsters.length === 0){
             gameState.waveComplete = true;
+            document.getElementById("next-wave").disabled = false;
             gameState.wave += 1;
             gameState.waveMonster = 0;
             gameState.waveElapsedTime = 0;
@@ -397,8 +477,10 @@ Game = function (graphics) {
     }
 
     return {
+        BOARD_SIZE: BOARD_SIZE,
         gameLoop: gameLoop,
         rebuildGame: rebuildGame,
+        insertTurret: insertTurret,
         endGame: endGame,
         gameState: getGameState
     }

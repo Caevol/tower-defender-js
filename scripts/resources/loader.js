@@ -33,15 +33,15 @@ MyGame.loader = (function() {
                 scripts: ['../utility/PriorityQueue', '../utility/pathfinder', '../utility/angles'],
                 message: 'Utilities loaded',
                 onComplete: null
+            },  {
+                scripts: ['../game/TowerDefense', '../game/prefabs', '../game/levels'],
+                message: 'Game State Loaded',
+                onComplete: null
             }, {
                 scripts: ['../game/gameRenderer'],
                 message: 'Renderer loaded',
                 onComplete: null
-            }, {
-                scripts: ['../game/TowerDefense', '../game/prefabs', '../game/levels'],
-                message: 'Game State Loaded',
-                onComplete: null
-            }
+            },
             ],
         assetOrder = [
             {

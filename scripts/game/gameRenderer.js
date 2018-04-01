@@ -1,7 +1,11 @@
 Renderer = (function(graphics){
 
-    let xScale = graphics.canvas.width / 50;
-    let yScale = graphics.canvas.height / 50;
+    let xScale = graphics.canvas.width / Game.BOARD_SIZE;
+    let yScale = graphics.canvas.height / Game.BOARD_SIZE;
+
+    let worldxScale = parseInt(document.getElementById("tower-game").style.width) / 50;
+    let worldyScale = parseInt(document.getElementById("tower-game").style.height) / 50;
+
 
     function clear(){
         graphics.context.save();
@@ -83,6 +87,10 @@ Renderer = (function(graphics){
     }
 
     return {
+        xScale : xScale,
+        yScale : yScale,
+        worldxScale : worldxScale,
+        worldyScale : worldyScale,
         clear: clear,
         drawMonster: drawMonster,
         drawTurretTop : drawTurretTop,

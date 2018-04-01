@@ -46,6 +46,7 @@ Pathfinder = (function(){
         }
 
         revPos = finalPos; //reverse path
+        revPos.nxt = null;
         while(revPos.prev !== null){
             revPos.prev.nxt = revPos;
             revPos = revPos.prev;
@@ -75,7 +76,8 @@ Pathfinder = (function(){
 
         let boardPosition = (pos.y + offY) * board.length + (pos.x + offX);
 
-        if(!visitedPositions.has(boardPosition) && board[pos.y + offY][pos.x + offX].occupied == false) {
+        if(!visitedPositions.has(boardPosition)
+            && board[pos.y + offY][pos.x + offX].occupied === false) {
             posHeap.push(Position(pos.x + offX, pos.y + offY, endX, endY, pos, pos.steps + stepOffset));
             visitedPositions.set((pos.y + offY) * board.length + (pos.x + offX), true);
         }

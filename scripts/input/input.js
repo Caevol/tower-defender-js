@@ -26,6 +26,7 @@ let Mouse = function Mouse() {
         let event;
         let handler;
 
+
         //
         // Process the mouse events for each of the different kinds of handlers
         for (event = 0; event < that.mouseDown.length; event++) {
