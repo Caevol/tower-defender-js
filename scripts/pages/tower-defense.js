@@ -12,6 +12,7 @@ Menu.screens['tower-defense'] =  (function() {
 
     function run() {
         Game.rebuildGame();
+        Game.gameLoop(performance.now() - Game.gameState().prevTime);
     }
 
     return {

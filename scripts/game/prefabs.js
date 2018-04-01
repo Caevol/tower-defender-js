@@ -1,14 +1,16 @@
 let maskCreep = {
-    spec : {
-        elapsedTime : 0,
-        asset : MyGame.assets['maskman'],
-        spriteNum : 0,
-        spriteCount : 9,
-        width : MyGame.assets['maskman'].width / 9,
-        height: MyGame.assets['maskman'].height,
-        offY: 0,
-        spriteTime : [100, 100, 100, 100, 100, 100, 100, 100, 100]
-    },
+
+    //SPEC INFO
+    elapsedTime : 0,
+    asset : MyGame.assets['maskman'],
+    spriteNum : 0,
+    spriteCount : 9,
+    width : MyGame.assets['maskman'].width / 9,
+    height: MyGame.assets['maskman'].height,
+    offY: 0,
+    spriteTime : [100, 100, 100, 100, 100, 100, 100, 100, 100],
+    //END SPEC INFO
+
     type : "Ground",
     x : 0,
     y : 0,
@@ -19,16 +21,17 @@ let maskCreep = {
 };
 
 let greenWalkingCreep = {
-    spec : {
-        elapsedTime : 0,
-        asset : MyGame.assets['greenDemon'],
-        spriteNum : 0,
-        spriteCount : 4,
-        width : MyGame.assets['greenDemon'].width / 4,
-        height: MyGame.assets['greenDemon'].height / 4,
-        offY: 2 * MyGame.assets['greenDemon'].height / 4,
-        spriteTime : [250, 250, 250, 250]
-    },
+    //SPEC INFO
+    elapsedTime : 0,
+    asset : MyGame.assets['greenDemon'],
+    spriteNum : 0,
+    spriteCount : 4,
+    width : MyGame.assets['greenDemon'].width / 4,
+    height: MyGame.assets['greenDemon'].height / 4,
+    offY: 2 * MyGame.assets['greenDemon'].height / 4,
+    spriteTime : [250, 250, 250, 250],
+    //END SPEC INFO
+
     type : "Ground",
     x : 0,
     y : 0,
@@ -39,6 +42,7 @@ let greenWalkingCreep = {
 };
 
 let scifiturret3 = {
+    //SAFE TO BAD COPY
     spec : {
         asset : MyGame.assets['greyTurret'],
         basePosX : 175,
@@ -51,12 +55,13 @@ let scifiturret3 = {
         twidth: 65,
         rotationOffset: Math.PI / 2
     },
-    interior: {
-        canfire : true,
-        cooldown : 200,
-        cooldownRemaining : 0,
-        target : null
-    },
+
+    //INTERIOR
+    canfire : true,
+    cooldown : 500,
+    cooldownRemaining : 0,
+    target : null,
+    //END INTERIOR
 
     x : 0,
     y : 0,

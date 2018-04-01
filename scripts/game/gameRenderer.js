@@ -11,21 +11,20 @@ Renderer = (function(graphics){
     }
 
     function drawMonster(monster){
-        let spec = monster.spec;
 
 
         graphics.context.save();
-        graphics.context.translate(monster.x - spec.width / 2, monster.y - spec.height / 2);
-        graphics.context.rotate(spec.rotation);
-        graphics.context.translate(-(monster.x - spec.width / 2), -(monster.y - spec.height / 2));
+        graphics.context.translate(monster.x - monster.width / 2, monster.y - monster.height / 2);
+        graphics.context.rotate(monster.rotation);
+        graphics.context.translate(-(monster.x - monster.width / 2), -(monster.y - monster.height / 2));
 
 
         graphics.context.drawImage(
-            spec.asset,
-            spec.width * spec.spriteNum, spec.offY,
-            spec.width, spec.height,
-            monster.x * xScale - 3 * spec.width / 4, monster.y * yScale - spec.height,
-            spec.width * 2, spec.height * 2
+            monster.asset,
+            monster.width * monster.spriteNum, monster.offY,
+            monster.width, monster.height,
+            monster.x * xScale - 3 * monster.width / 4, monster.y * yScale - monster.height,
+            monster.width * 2, monster.height * 2
             );
 
         graphics.context.restore();

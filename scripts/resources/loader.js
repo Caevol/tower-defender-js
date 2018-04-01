@@ -38,7 +38,7 @@ MyGame.loader = (function() {
                 message: 'Renderer loaded',
                 onComplete: null
             }, {
-                scripts: ['../game/TowerDefense', '../game/prefabs'],
+                scripts: ['../game/TowerDefense', '../game/prefabs', '../game/levels'],
                 message: 'Game State Loaded',
                 onComplete: null
             }

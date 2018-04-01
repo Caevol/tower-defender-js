@@ -94,16 +94,15 @@ Game = function (graphics) {
             let m = gameState.monsters[i];
 
             //update sprite info
-            m.spec.elapsedTime += elapsedTime;
-            if(m.spec.elapsedTime >= m.spec.spriteTime[m.spec.spriteNum]){
-                m.spec.elapsedTime -= m.spec.spriteTime[m.spec.spriteNum];
-                m.spec.spriteNum += 1;
-                m.spec.spriteNum = m.spec.spriteNum % m.spec.spriteCount;
+            m.elapsedTime += elapsedTime;
+            if(m.elapsedTime >= m.spriteTime[m.spriteNum]){
+                m.elapsedTime -= m.spriteTime[m.spriteNum];
+                m.spriteNum += 1;
+                m.spriteNum = m.spriteNum % m.spriteCount;
             }
 
             //move monster
             if(m.type === "Ground" ) {
-
                 let dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
                 if (dist < MONSTER_THRESHOLD) {
 
@@ -148,38 +147,38 @@ Game = function (graphics) {
             let t = gameState.turrets[i];
 
             //update cooldown
-            if(t.interior.canfire === false) {
-                t.interior.cooldownRemaining -= elapsedTime;
-                if (t.interior.cooldownRemaining <= 0) {
-                    t.interior.canfire = true;
-                    t.interior.cooldownRemaining = t.interior.cooldown;
+            if(t.canfire === false) {
+                t.cooldownRemaining -= elapsedTime;
+                if (t.cooldownRemaining <= 0) {
+                    t.canfire = true;
+                    t.cooldownRemaining = t.cooldown;
                 }
             }
 
-            if(t.interior.target !== null && getDistance(t, t.interior.target) > t.range) {
-                t.interior.target = null;
+            if(t.target !== null && getDistance(t, t.target) > t.range) {
+                t.target = null;
             }
 
             //find new target
-            if(t.interior.target === null || t.interior.target.health <= 0){
+            if(t.target === null || t.target.health <= 0){
                 //look for new target
                 let minDist = t.range + 1;
                 for(let n = 0; n < gameState.monsters.length; n ++){
                     let newDist = getDistance(t, gameState.monsters[n]);
                     if(newDist < minDist){
                         minDist = newDist;
-                        t.interior.target = gameState.monsters[n];
+                        t.target = gameState.monsters[n];
                     }
                 }
             }
 
             //turn towards and fire on target
-            if(t.interior.target !== null){
-                let angles = getAngle(t.rotation, t.x, t.y, t.interior.target.x, t.interior.target.y);
+            if(t.target !== null){
+                let angles = getAngle(t.rotation, t.x, t.y, t.target.x, t.target.y);
                 if(angles.angle < TURRET_THRESHOLD){
-                    if(t.interior.canfire){
+                    if(t.canfire){
                         gameState.projectiles.push(Projectile(t.x, t.y, t.rotation, t.projectile));
-                        t.interior.canfire = false;
+                        t.canfire = false;
                     }
                 }
                 else {
@@ -227,14 +226,19 @@ Game = function (graphics) {
             }
             tileBoard.push(row);
         }
+
         return tileBoard;
     }
 
-    function rebuildGame() {
+    function rebuildGame(level = 1) {
         gameState = {
+            level : level,
+            wave : 0,
+            waveMonster : 0,
+            waveElapsedTime: 0,
             selectedTower: null,
             purchaseTower: null,
-            waveNumber: 0,
+            levelWaves: null,
             waves: [],
             monsters: [],
             turrets: [],
@@ -246,6 +250,8 @@ Game = function (graphics) {
             continueGame: true,
             prevTime: performance.now(),
         };
+
+        setLevel(gameState);
 
         let t = Turret(25, 25, "scifi3");
         occupySpaces(t);
@@ -259,14 +265,65 @@ Game = function (graphics) {
         occupySpaces(t2);
         gameState.turrets.push(t2);
 
-        gameState.monsters.push(Monster(15, 3, 45, 48, "mask"));
-        gameState.monsters.push(Monster(30, 30, 3, 7, "greenDemon"));
+        gameState.waveComplete = false;
+
+    }
+
+    function instantiateMonster(monsterInfo){
+        let x, y, endX, endY;
 
 
+        switch(monsterInfo[2]){
+            case "SIDE":
+                x = 0;
+                y = Math.floor(Math.random() * 4) + 23;
+                endX = BOARD_SIZE - 1;
+                endY = Math.floor(Math.random() * 4) + 23;
+                break;
+            case "TOP":
+                x = Math.floor(Math.random() * 4) + 23;
+                y = 0;
+                endX = Math.floor(Math.random() * 4) + 23;
+                endY = BOARD_SIZE - 1;
+                break;
+        }
 
 
+        gameState.monsters.push(Monster(x, y, endX, endY, monsterInfo[1]));
+    }
 
-        gameLoop(performance.now() - gameState.prevTime);
+    function updateLevel(elapsedTime){
+        if(gameState.waveComplete === true) {
+            return;
+        }
+
+        // Wave Complete, move to next wave and wait for player
+        if(gameState.waveMonster === gameState.levelWaves[gameState.wave].length && gameState.monsters.length === 0){
+            gameState.waveComplete = true;
+            gameState.wave += 1;
+            gameState.waveMonster = 0;
+            gameState.waveElapsedTime = 0;
+
+            if(gameState.wave >= gameState.levelWaves.length){
+                gameState.level ++;
+                rebuildGame(gameState.level);
+            }
+            return;
+        }
+
+        if(gameState.waveMonster >= gameState.levelWaves[gameState.wave].length) {
+            return;
+        }
+
+        //generate next wave monster on time
+        gameState.waveElapsedTime += elapsedTime;
+        let activeWave = gameState.levelWaves[gameState.wave];
+        if(gameState.waveElapsedTime > activeWave[gameState.waveMonster][0]) {
+            //instantiate monster
+            instantiateMonster(activeWave[gameState.waveMonster]);
+            gameState.waveElapsedTime -= activeWave[gameState.waveMonster][0];
+            gameState.waveMonster ++;
+        }
     }
 
     function drawMonsters(elapsedTime){
@@ -332,6 +389,7 @@ Game = function (graphics) {
     }
 
     function update(elapsedTime) {
+        updateLevel(elapsedTime);
         updateTowers(elapsedTime);
         updateProjectiles(elapsedTime);
         updateMonsters(elapsedTime);
