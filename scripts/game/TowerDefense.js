@@ -1,5 +1,8 @@
 Game = function (graphics) {
 
+    let sellButton = document.getElementById("Sell");
+    let upgradeButton = document.getElementById("Upgrade");
+
     const BOARD_SIZE = 50;
     const MONSTER_THRESHOLD = .3;
     const TURRET_THRESHOLD = .1;
@@ -44,7 +47,8 @@ Game = function (graphics) {
 
     function insertTurret(x, y){
 
-        let t = Turret(x, y, gameState.selectedTower);
+        let t = Turret(x, y, gameState.purchaseTower);
+        
 
         if(canPlaceTurret(t, x, y) === true){
          //occupy space
@@ -52,14 +56,18 @@ Game = function (graphics) {
 
             updateMonsterPaths();
 
+            gameState.money -= t.purchaseCost;
             Game.gameState().turrets.push(t);
         }
 
 
     }
 
-    //TODO: ADD CHECK THAT ALL MONSTERS CAN NAVIGATE TO EXITS
+
     function canPlaceTurret(t, x, y){
+        if(gameState.money - t.purchaseCost < 0){
+            return false;
+        }
 
         for(let i = 0; i < FORBIDDEN.length; i ++){
             if(x === FORBIDDEN[i][0] && y === FORBIDDEN[i][1]){
@@ -329,6 +337,10 @@ Game = function (graphics) {
 
     function rebuildGame(level = 1) {
         gameState = {
+            curMouseX : -1,
+            curMouseY : -1,
+            mouseMovedThisFrame : false,
+
             level : level,
             wave : 0,
             waveMonster : 0,
@@ -431,6 +443,85 @@ Game = function (graphics) {
         }
     }
 
+    function drawUITurret(elapsedTime){
+        if(gameState.purchaseTower === null){
+            return;
+        }
+        if(gameState.curMouseX < 0 || gameState.curMouseX >= BOARD_SIZE || gameState.curMouseY < 0 || gameState.curMouseY >= BOARD_SIZE){
+            return;
+        }
+
+        let t = Turret(gameState.curMouseX, gameState.curMouseY, gameState.purchaseTower);
+        Renderer.drawTmpTurret(t);
+
+        let canPlace = canPlaceTurret(t, gameState.curMouseX, gameState.curMouseY);
+
+        Renderer.drawTurretRadius(t, canPlace);
+
+    }
+
+    function upgradeSelectedTower(){
+        if(gameState.selectedTower === null || gameState.selectedTower.upgradeTower === null || gameState.money - gameState.selectedTower.purchaseCost < 0){
+            return;
+        }
+
+        gameState.money -= gameState.selectedTower.purchaseCost;
+
+        let t = Turret(gameState.selectedTower.x, gameState.selectedTower.y, gameState.selectedTower.upgradeTower);
+        let i = gameState.turrets.indexOf(gameState.selectedTower);
+
+        gameState.turrets.splice(i, 1);
+        gameState.push(t);
+
+        setSelectedTower(t);
+    }
+
+    function sellSelectedTower(){
+        if(gameState.selectedTower === null){
+            return;
+        }
+
+        gameState.money += gameState.selectedTower.sellval;
+
+        let i = gameState.turrets.indexOf(gameState.selectedTower);
+        gameState.turrets.splice(i, 1);
+        deOccupySpaces(gameState.selectedTower);
+
+        setSelectedTower(null);
+    }
+
+    function selectTower(x, y){
+        if(x >= 0 && y >= 0 && y < Game.BOARD_SIZE && x < Game.BOARD_SIZE) {
+
+            for(let i = 0; i < gameState.turrets.length; i++){
+                let t = gameState.turrets[i];
+                if(x >= t.x && x < t.x + t.size && y >= t.y && y < t.y + t.size){
+                    setSelectedTower(t);
+                    return;
+                }
+            }
+            setSelectedTower(null);
+        }
+
+    }
+
+    function setSelectedTower(t){
+        if(t === null){
+            gameState.selectedTower = null;
+            upgradeButton.textContent = "Upgrade";
+            sellButton.textContent = "Sell";
+            upgradeButton.disabled = true;
+            sellButton.disabled = true;
+            return;
+        }
+
+        gameState.selectedTower = t;
+        upgradeButton.textContent = "Upgrade: " + t.upgradeCost;
+        sellButton.textContent = "Sell: " + t.sellval;
+        upgradeButton.disabled = false;
+        sellButton.disabled = false;
+    }
+
     function endGame() {
         gameState.continueGame = false;
     }
@@ -467,6 +558,8 @@ Game = function (graphics) {
         Renderer.clear();
         Renderer.drawBackground(gameState.tileBoard);
         drawTurrets(elapsedTime);
+        //draw UI turrets
+        drawUITurret(elapsedTime);
         drawMonsters(elapsedTime);
         drawProjectiles(elapsedTime);
         //drawParticles
@@ -482,6 +575,9 @@ Game = function (graphics) {
 
     return {
         BOARD_SIZE: BOARD_SIZE,
+        upgradeSelectedTower: upgradeSelectedTower,
+        sellSelectedTower: sellSelectedTower,
+        selectTower: selectTower,
         gameLoop: gameLoop,
         rebuildGame: rebuildGame,
         insertTurret: insertTurret,

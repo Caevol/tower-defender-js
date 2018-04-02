@@ -14,6 +14,26 @@ Renderer = (function(graphics){
         graphics.context.restore();
     }
 
+    function drawTmpTurret(t){
+        graphics.context.globalAlpha = .5;
+        drawTurretBase(t);
+        drawTurretTop(t);
+        graphics.context.globalAlpha = 1;
+    }
+
+    function drawTurretRadius(t, canPlace){
+        if(canPlace === true) {
+            graphics.context.fillStyle = 'rgba(0, 0, 255, .3)';
+        }
+        else {
+            graphics.context.fillStyle = 'rgba(255, 0, 0, .3)';
+        }
+        graphics.context.beginPath();
+        graphics.context.arc((t.x + t.size / 2) * xScale, (t.y + t.size / 2) * yScale, (t.range) * xScale, 0, Math.PI * 2);
+        graphics.context.fill();
+        graphics.context.fillStyle = 'rgba(255, 255, 255, 1)';
+    }
+
     function drawMonster(monster){
 
 
@@ -92,6 +112,8 @@ Renderer = (function(graphics){
         worldxScale : worldxScale,
         worldyScale : worldyScale,
         clear: clear,
+        drawTmpTurret : drawTmpTurret,
+        drawTurretRadius : drawTurretRadius,
         drawMonster: drawMonster,
         drawTurretTop : drawTurretTop,
         drawTurretBase : drawTurretBase,

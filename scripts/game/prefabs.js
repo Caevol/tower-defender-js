@@ -70,8 +70,8 @@ let scifiturret3 = {
     rotationSpeed : .003,
     size : 3,
     upgradeCost : 100,
-    sellval : 50,
-    purchaseCost : 75,
+    sellval : 40,
+    purchaseCost : 50,
     projectile: "fireball", //update
     upgradeTower : null
 };
