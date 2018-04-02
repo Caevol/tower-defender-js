@@ -48,7 +48,7 @@ Game = function (graphics) {
     function insertTurret(x, y){
 
         let t = Turret(x, y, gameState.purchaseTower);
-        
+
 
         if(canPlaceTurret(t, x, y) === true){
          //occupy space
@@ -558,11 +558,13 @@ Game = function (graphics) {
         Renderer.clear();
         Renderer.drawBackground(gameState.tileBoard);
         drawTurrets(elapsedTime);
-        //draw UI turrets
         drawUITurret(elapsedTime);
         drawMonsters(elapsedTime);
         drawProjectiles(elapsedTime);
         //drawParticles
+
+        Renderer.drawLives(gameState.lives);
+        Renderer.drawMoney(gameState.money);
     }
 
     function update(elapsedTime) {

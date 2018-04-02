@@ -1,4 +1,4 @@
-Renderer = (function(graphics){
+Renderer = function (graphics) {
 
     let xScale = graphics.canvas.width / Game.BOARD_SIZE;
     let yScale = graphics.canvas.height / Game.BOARD_SIZE;
@@ -7,22 +7,22 @@ Renderer = (function(graphics){
     let worldyScale = parseInt(document.getElementById("tower-game").style.height) / 50;
 
 
-    function clear(){
+    function clear() {
         graphics.context.save();
         graphics.context.setTransform(1, 0, 0, 1, 0, 0);
         graphics.context.clearRect(0, 0, graphics.canvas.width, graphics.canvas.height);
         graphics.context.restore();
     }
 
-    function drawTmpTurret(t){
+    function drawTmpTurret(t) {
         graphics.context.globalAlpha = .5;
         drawTurretBase(t);
         drawTurretTop(t);
         graphics.context.globalAlpha = 1;
     }
 
-    function drawTurretRadius(t, canPlace){
-        if(canPlace === true) {
+    function drawTurretRadius(t, canPlace) {
+        if (canPlace === true) {
             graphics.context.fillStyle = 'rgba(0, 0, 255, .3)';
         }
         else {
@@ -34,7 +34,19 @@ Renderer = (function(graphics){
         graphics.context.fillStyle = 'rgba(255, 255, 255, 1)';
     }
 
-    function drawMonster(monster){
+    function drawLives(lives) {
+        graphics.context.font = "40px Arial";
+        graphics.context.fillStyle = 'rgba(255, 255, 255, 1)';
+        graphics.context.fillText("Lives: " + lives, 40, graphics.canvas.height - 50);
+    }
+
+    function drawMoney(money) {
+        graphics.context.font = "40px Arial";
+        graphics.context.fillStyle = 'rgba(255, 255, 255, 1)';
+        graphics.context.fillText("Money: " + money, 40, graphics.canvas.height - 100);
+    }
+
+    function drawMonster(monster) {
 
 
         graphics.context.save();
@@ -49,12 +61,12 @@ Renderer = (function(graphics){
             monster.width, monster.height,
             monster.x * xScale - 3 * monster.width / 4, monster.y * yScale - monster.height,
             monster.width * 2, monster.height * 2
-            );
+        );
 
         graphics.context.restore();
     }
 
-    function drawProjectile(proj){
+    function drawProjectile(proj) {
 
         graphics.context.drawImage(
             proj.spec.asset,
@@ -63,7 +75,7 @@ Renderer = (function(graphics){
         )
     }
 
-    function drawTurretTop(turret){
+    function drawTurretTop(turret) {
         let spec = turret.spec;
 
         graphics.context.save();
@@ -81,7 +93,7 @@ Renderer = (function(graphics){
         graphics.context.restore();
     }
 
-    function drawTurretBase(turret){
+    function drawTurretBase(turret) {
         let spec = turret.spec;
 
         graphics.context.drawImage(
@@ -93,10 +105,10 @@ Renderer = (function(graphics){
         );
     }
 
-    function drawBadBackground(board){
-        for(let y = 0; y < board.length; y ++){
-            for(let x = 0; x < board[y].length; x ++){
-                if(board[y][x].occupied === true){
+    function drawBadBackground(board) {
+        for (let y = 0; y < board.length; y++) {
+            for (let x = 0; x < board[y].length; x++) {
+                if (board[y][x].occupied === true) {
                     graphics.context.fillStyle = 'rgb(0, 0, 0)';
                 } else {
                     graphics.context.fillStyle = 'rgb(150, 150, 150)';
@@ -107,17 +119,19 @@ Renderer = (function(graphics){
     }
 
     return {
-        xScale : xScale,
-        yScale : yScale,
-        worldxScale : worldxScale,
-        worldyScale : worldyScale,
+        xScale: xScale,
+        yScale: yScale,
+        worldxScale: worldxScale,
+        worldyScale: worldyScale,
+        drawMoney: drawMoney,
+        drawLives: drawLives,
         clear: clear,
-        drawTmpTurret : drawTmpTurret,
-        drawTurretRadius : drawTurretRadius,
+        drawTmpTurret: drawTmpTurret,
+        drawTurretRadius: drawTurretRadius,
         drawMonster: drawMonster,
-        drawTurretTop : drawTurretTop,
-        drawTurretBase : drawTurretBase,
+        drawTurretTop: drawTurretTop,
+        drawTurretBase: drawTurretBase,
         drawBackground: drawBadBackground,
         drawProjectile: drawProjectile
     }
-}(GameGraphics));
+}(GameGraphics);
