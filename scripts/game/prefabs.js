@@ -71,7 +71,7 @@ let scifiturret3 = {
     size : 3,
     upgradeCost : 100,
     sellval : 40,
-    purchaseCost : 50,
+    purchaseCost : 30,
     projectile: "fireball", //update
     upgradeTower : null
 };
