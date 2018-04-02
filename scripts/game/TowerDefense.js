@@ -5,10 +5,14 @@ Game = function (graphics) {
     const TURRET_THRESHOLD = .1;
     let gameState = {};
     const BACKGROUND = [];
+    const FORBIDDEN = [[0, 23], [0, 24], [0, 25], [0, 26],
+            [23, 0], [24, 0], [25, 0], [26, 0],
+        [49, 23], [49, 24], [49, 25], [49, 26],
+        [23, 49], [24, 49], [25, 49], [26, 49]
+        ];
 
 
-
-    function Monster(startX, startY, endX, endY, creepType){
+        function Monster(startX, startY, endX, endY, creepType){
         let m = {};
         switch(creepType){
             case "mask":
@@ -42,11 +46,9 @@ Game = function (graphics) {
 
         let t = Turret(x, y, gameState.selectedTower);
 
-        console.log("VERIFY");
         if(canPlaceTurret(t, x, y) === true){
          //occupy space
             occupySpaces(t);
-            console.log("OCCUPIED");
 
             updateMonsterPaths();
 
@@ -58,6 +60,13 @@ Game = function (graphics) {
 
     //TODO: ADD CHECK THAT ALL MONSTERS CAN NAVIGATE TO EXITS
     function canPlaceTurret(t, x, y){
+
+        for(let i = 0; i < FORBIDDEN.length; i ++){
+            if(x === FORBIDDEN[i][0] && y === FORBIDDEN[i][1]){
+                return false;
+            }
+        }
+
         for(let y0 = y; y0 < y + t.size; y0 ++){
             for(let x0 = x; x0 < x + t.size; x0 ++){
                 if(gameState.tileBoard[y0][x0].occupied === true){
@@ -67,6 +76,15 @@ Game = function (graphics) {
         }
 
         occupySpaces(t);
+
+        let p1 = Pathfinder.getPath(0, BOARD_SIZE / 2, BOARD_SIZE - 1, BOARD_SIZE / 2, gameState.tileBoard); //LEFT RIGHT
+        let p2 = Pathfinder.getPath(BOARD_SIZE / 2, 0, BOARD_SIZE / 2, BOARD_SIZE - 1, gameState.tileBoard); //UP DOWN PATH
+
+        if(p1 === null || p2 === null){
+            deOccupySpaces(t);
+            return false;
+        }
+
         for(let i = 0; i < gameState.monsters.length; i ++){
             let m = gameState.monsters[i];
             let pos = m.path;
@@ -84,7 +102,6 @@ Game = function (graphics) {
 
         }
         deOccupySpaces(t);
-
         return true;
     }
 
@@ -95,18 +112,17 @@ Game = function (graphics) {
             let pos = m.path;
             while(pos.nxt !== null){
                 if(gameState.tileBoard[pos.y][pos.x].occupied === true){
-                    m.path = Pathfinder.getPath(m.path.x, m.path.x, m.end.x, m.end.y, gameState.tileBoard);
+                    m.path = Pathfinder.getPath(m.path.x, m.path.y, m.end.x, m.end.y, gameState.tileBoard);
                     break;
                 }
                 pos = pos.nxt;
             }
 
 
-
-
             if(m.path === null) {
-                console.log("SOMETHINGS GONE WRONG, PATH FOR MONSTER IS NULL!");
+                console.log("SOMETHINGS GONE WRONG, MONSTER PATH IS NULL")
             }
+
         }
     }
 
@@ -333,18 +349,6 @@ Game = function (graphics) {
         };
 
         setLevel(gameState);
-
-        let t = Turret(25, 25, "scifi3");
-        occupySpaces(t);
-        gameState.turrets.push(t);
-
-        let t1 = Turret(15, 25, "scifi3");
-        occupySpaces(t1);
-        gameState.turrets.push(t1);
-
-        let t2 = Turret(35, 25, "scifi3");
-        occupySpaces(t2);
-        gameState.turrets.push(t2);
 
     }
 

@@ -102,7 +102,7 @@ level1Waves = [
         [150, "mask", 'SIDE'],
         [150, "mask", 'SIDE'],
         [150, "mask", 'SIDE'],
-        [150, "mask", 'SIDE'],
+        [150, "mask", 'SIDE']
     ]
 ];
 

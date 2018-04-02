@@ -11,7 +11,7 @@ let maskCreep = {
     spriteTime : [100, 100, 100, 100, 100, 100, 100, 100, 100],
     //END SPEC INFO
 
-    type : "Ground",
+    type : 'Ground',
     x : 0,
     y : 0,
     speed : .1,

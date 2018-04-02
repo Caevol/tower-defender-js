@@ -54,6 +54,7 @@ Pathfinder = (function(){
         }
         delete revPos.prev;
 
+
         return revPos;
 
     }
