@@ -105,6 +105,16 @@ Renderer = function (graphics) {
         );
     }
 
+    function drawTurretUpgrade(turret){
+        graphics.context.drawImage(
+            MyGame.assets['upgradeStar'],
+            turret.upgradeLevel * 150, 0,
+            150, 145,
+            turret.x * xScale, (turret.y + (turret.size - 1)) * yScale,
+            xScale, yScale
+        );
+    }
+
     function drawBadBackground(board) {
         for (let y = 0; y < board.length; y++) {
             for (let x = 0; x < board[y].length; x++) {
@@ -130,6 +140,7 @@ Renderer = function (graphics) {
         drawTurretRadius: drawTurretRadius,
         drawMonster: drawMonster,
         drawTurretTop: drawTurretTop,
+        drawTurretUpgrade: drawTurretUpgrade,
         drawTurretBase: drawTurretBase,
         drawBackground: drawBadBackground,
         drawProjectile: drawProjectile

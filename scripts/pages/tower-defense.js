@@ -71,8 +71,8 @@ Menu.screens['tower-defense'] =  (function() {
         document.getElementById("tower-1").addEventListener(
             "click",
             function() {
-                if(Game.gameState().purchaseTower !== "scifi3") {
-                    Game.gameState().purchaseTower = "scifi3";
+                if(Game.gameState().purchaseTower !== "scifi1") {
+                    Game.gameState().purchaseTower = "scifi1";
                 } else {
                     Game.gameState().purchaseTower = null;
                 }

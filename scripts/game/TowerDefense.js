@@ -36,9 +36,14 @@ Game = function (graphics) {
     function Turret(x, y, towerType){
         let t = {};
         switch(towerType) {
+            case "scifi1":
+                t = Object.assign({}, scifiturret1);
+                break;
+            case "scifi2":
+                t = Object.assign({}, scifiturret2);
+                break;
             case "scifi3":
                 t = Object.assign({}, scifiturret3);
-                break;
         }
         t.x = x;
         t.y = y;
@@ -397,6 +402,7 @@ Game = function (graphics) {
             gameState.waveComplete = true;
             document.getElementById("next-wave").disabled = false;
             gameState.wave += 1;
+            gameState.projectiles.length = 0;
             gameState.waveMonster = 0;
             gameState.waveElapsedTime = 0;
 
@@ -435,6 +441,10 @@ Game = function (graphics) {
         for(let i = 0; i < gameState.turrets.length; i++){
             Renderer.drawTurretTop(gameState.turrets[i]);
         }
+
+        for(let i = 0; i < gameState.turrets.length; i++){
+            Renderer.drawTurretUpgrade(gameState.turrets[i]);
+        }
     }
 
     function drawProjectiles(elapsedTime){
@@ -465,13 +475,13 @@ Game = function (graphics) {
             return;
         }
 
-        gameState.money -= gameState.selectedTower.purchaseCost;
+        gameState.money -= gameState.selectedTower.upgradeCost;
 
         let t = Turret(gameState.selectedTower.x, gameState.selectedTower.y, gameState.selectedTower.upgradeTower);
         let i = gameState.turrets.indexOf(gameState.selectedTower);
 
         gameState.turrets.splice(i, 1);
-        gameState.push(t);
+        gameState.turrets.push(t);
 
         setSelectedTower(t);
     }
@@ -516,9 +526,16 @@ Game = function (graphics) {
         }
 
         gameState.selectedTower = t;
-        upgradeButton.textContent = "Upgrade: " + t.upgradeCost;
+        if(t.upgradeCost === null){
+            upgradeButton.textContent = "FULLY UPGRADED";
+            upgradeButton.disabled = true;
+        }
+        else {
+            upgradeButton.textContent = "Upgrade: " + t.upgradeCost;
+            upgradeButton.disabled = false;
+        }
         sellButton.textContent = "Sell: " + t.sellval;
-        upgradeButton.disabled = false;
+
         sellButton.disabled = false;
     }
 

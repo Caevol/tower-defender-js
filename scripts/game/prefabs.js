@@ -14,7 +14,7 @@ let maskCreep = {
     type : 'Ground',
     x : 0,
     y : 0,
-    speed : .1,
+    speed : .07,
     path : null,
     health : 100,
     value : 10
@@ -35,13 +35,85 @@ let greenWalkingCreep = {
     type : "Ground",
     x : 0,
     y : 0,
-    speed : .05,
+    speed : .03,
     path : null,
     health : 250,
     value : 25
 };
 
 let scifiturret3 = {
+    //SAFE TO BAD COPY
+    spec : {
+        asset : MyGame.assets['greyTurret'],
+        basePosX : 175,
+        basePosY : 75,
+        turretPosX : 288,
+        turretPosY : 93,
+        bheight : 80,
+        bwidth: 80,
+        theight : 75,
+        twidth: 65,
+        rotationOffset: Math.PI / 2
+    },
+
+    //INTERIOR
+    canfire : true,
+    cooldown : 100,
+    cooldownRemaining : 0,
+    target : null,
+    //END INTERIOR
+
+    x : 0,
+    y : 0,
+    range: 15,
+    rotation: 0,
+    rotationSpeed : .004,
+    size : 3,
+    upgradeCost : null,
+    sellval : 150,
+    purchaseCost : 0,
+    projectile: "fireball", //update
+    upgradeLevel : 2,
+    upgradeTower : null
+};
+
+let scifiturret2 = {
+    //SAFE TO BAD COPY
+    spec : {
+        asset : MyGame.assets['greyTurret'],
+        basePosX : 175,
+        basePosY : 75,
+        turretPosX : 288,
+        turretPosY : 93,
+        bheight : 80,
+        bwidth: 80,
+        theight : 75,
+        twidth: 65,
+        rotationOffset: Math.PI / 2
+    },
+
+    //INTERIOR
+    canfire : true,
+    cooldown : 200,
+    cooldownRemaining : 0,
+    target : null,
+    //END INTERIOR
+
+    x : 0,
+    y : 0,
+    range: 13,
+    rotation: 0,
+    rotationSpeed : .003,
+    size : 3,
+    upgradeCost : 100,
+    sellval : 70,
+    purchaseCost : 0,
+    projectile: "fireball", //update
+    upgradeLevel : 1,
+    upgradeTower : "scifi3"
+};
+
+let scifiturret1 = {
     //SAFE TO BAD COPY
     spec : {
         asset : MyGame.assets['greyTurret'],
@@ -67,13 +139,14 @@ let scifiturret3 = {
     y : 0,
     range: 10,
     rotation: 0,
-    rotationSpeed : .003,
+    rotationSpeed : .0025,
     size : 3,
-    upgradeCost : 100,
-    sellval : 40,
+    upgradeCost : 50,
+    sellval : 25,
     purchaseCost : 30,
     projectile: "fireball", //update
-    upgradeTower : null
+    upgradeLevel : 0,
+    upgradeTower : "scifi2"
 };
 
 let fireball = {

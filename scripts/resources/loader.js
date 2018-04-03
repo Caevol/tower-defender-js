@@ -56,6 +56,9 @@ MyGame.loader = (function() {
             }, {
                 key : 'fireball',
                 source: '../../assets/projectiles/FireBomb.png'
+            }, {
+                key : 'upgradeStar',
+                source: '../../assets/turrets/UpgradeStar.png'
             }
         ]; //no assets yet
 
