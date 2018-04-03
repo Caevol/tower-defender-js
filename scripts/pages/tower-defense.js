@@ -78,6 +78,35 @@ Menu.screens['tower-defense'] =  (function() {
                 }
             });
 
+        document.getElementById("tower-2").addEventListener(
+            "click",
+            function() {
+                if(Game.gameState().purchaseTower !== "bomb1") {
+                    Game.gameState().purchaseTower = "bomb1";
+                } else {
+                    Game.gameState().purchaseTower = null;
+                }
+            });
+
+        document.getElementById("tower-3").addEventListener(
+            "click",
+            function() {
+                if(Game.gameState().purchaseTower !== "linearair1") {
+                    Game.gameState().purchaseTower = "linearair1";
+                } else {
+                    Game.gameState().purchaseTower = null;
+                }
+            });
+
+        document.getElementById("tower-4").addEventListener(
+            "click",
+            function() {
+                if(Game.gameState().purchaseTower !== "seekingAir1") {
+                    Game.gameState().purchaseTower = "seekingAir1";
+                } else {
+                    Game.gameState().purchaseTower = null;
+                }
+            });
     }
 
 

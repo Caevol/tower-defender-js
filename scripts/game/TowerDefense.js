@@ -6,6 +6,7 @@ Game = function (graphics) {
     const BOARD_SIZE = 50;
     const MONSTER_THRESHOLD = .3;
     const TURRET_THRESHOLD = .1;
+    const MISSILE_MAX_SPEED = 2;
     let gameState = {};
     const BACKGROUND = [];
     const FORBIDDEN = [[0, 23], [0, 24], [0, 25], [0, 26],
@@ -24,12 +25,24 @@ Game = function (graphics) {
             case "greenDemon":
                 m = Object.assign({}, greenWalkingCreep);
                 break;
+            case "plane":
+                m = Object.assign({}, flyingCreep);
+                break;
         }
 
         m.x = startX;
         m.y = startY;
         m.end = {x: endX, y: endY};
-        m.path = Pathfinder.getPath(m.x, m.y, m.end.x, m.end.y, gameState.tileBoard);
+        if(m.type === "Ground") {
+            m.path = Pathfinder.getPath(m.x, m.y, m.end.x, m.end.y, gameState.tileBoard);
+        }
+        else {
+            m.path = {
+                x : m.end.x,
+                y : m.end.y,
+                nxt: null
+            }
+        }
         return m;
     }
 
@@ -44,6 +57,34 @@ Game = function (graphics) {
                 break;
             case "scifi3":
                 t = Object.assign({}, scifiturret3);
+                break;
+            case "bomb1":
+                t = Object.assign({}, bombTower1);
+                break;
+            case "bomb2":
+                t = Object.assign({}, bombTower2);
+                break;
+            case "bomb3":
+                t = Object.assign({}, bombTower3);
+                break;
+            case "linearair1":
+                t = Object.assign({}, linearAirTurret1);
+                break;
+            case "linearair2":
+                t = Object.assign({}, linearAirTurret2);
+                break;
+            case "linearair3":
+                t = Object.assign({}, linearAirTurret3);
+                break;
+            case "seekingAir1":
+                t = Object.assign({}, seekingAirTurret1);
+                break;
+            case "seekingAir2":
+                t = Object.assign({}, seekingAirTurret2);
+                break;
+            case "seekingAir3":
+                t = Object.assign({}, seekingAirTurret3);
+                break;
         }
         t.x = x;
         t.y = y;
@@ -139,19 +180,86 @@ Game = function (graphics) {
         }
     }
 
-    function Projectile(x, y, angle, projectileType){
+    function Projectile(x, y, angle, projectileType, target){
         let p = {};
         switch(projectileType) {
+            case "fireballAir":
+                p = Object.assign({}, fireballAir);
+                p.update = linearProjectileUpdate;
+                p.detonate = detonateSingleTarget;
+                break;
             case "fireball":
                 p = Object.assign({}, fireball);
                 p.update = linearProjectileUpdate;
                 p.detonate = detonateSingleTarget;
+                break;
+            case "bombball":
+                p = Object.assign({}, bombball);
+                p.update = linearProjectileUpdate;
+                p.detonate = detonateArea;
+                p.rotation = angle;
+                break;
+            case "bombball2":
+                p = Object.assign({}, bombballBlue);
+                p.update = linearProjectileUpdate;
+                p.detonate = detonateArea;
+                p.rotation = angle;
+                break;
+            case "bombball3":
+                p = Object.assign({}, bombballRed);
+                p.update = linearProjectileUpdate;
+                p.detonate = detonateArea;
+                p.rotation = angle;
+                break;
+            case "seekingAirMine":
+                p = Object.assign({}, seekingMine);
+                p.update = seekSingleTarget;
+                p.detonate = detonateSingleTarget;
+                p.rotation = angle;
+                p.target = target;
                 break;
         }
         p.x = x;
         p.y = y;
         p.angle = angle;
         return p;
+    }
+
+    function seekSingleTarget(p, elapsedTime){
+        if(p.target.health < 0 || p.target.reachedDestination === true){
+            return false;
+        }
+
+        let m = p.target;
+        let dist = Math.sqrt(Math.pow(m.x - p.x,2) + Math.pow(m.y - p.y,2));
+        let distX = m.x - p.x;
+        let distY = m.y - p.y;
+        distX /= dist;
+        distY /= dist;
+
+        p.velX += distX * p.speed * elapsedTime;
+        p.velY += distY * p.speed * elapsedTime;
+
+        let speed = Math.sqrt(Math.pow(p.velX,2) + Math.pow(p.velY, 2));
+        if(speed > MISSILE_MAX_SPEED){
+            p.velX /= speed;
+            p.velY /= speed;
+            p.velX *= MISSILE_MAX_SPEED;
+            p.velY *= MISSILE_MAX_SPEED;
+        }
+
+        p.x += p.velX;
+        p.y += p.velY;
+
+        p.rotation = Math.atan(p.velY, p.velX);
+
+        dist = Math.sqrt(Math.pow(m.x - p.x,2) + Math.pow(m.y - p.y,2));
+        if(dist < p.radius){
+            p.detonate(p, m);
+            return false;
+        }
+
+        return true;
     }
 
     function updateProjectiles(elapsedTime){
@@ -172,7 +280,7 @@ Game = function (graphics) {
         for(let n = 0; n < gameState.monsters.length; n ++){
             let m = gameState.monsters[n];
             let dist = Math.sqrt(Math.pow(m.x - p.x,2) + Math.pow(m.y - p.y,2));
-            if(dist <= p.radius) {
+            if(dist <= p.radius && m.type === p.type) {
                 p.detonate(p, m);
                 return false;
             }
@@ -183,6 +291,22 @@ Game = function (graphics) {
     function detonateSingleTarget(p, m){
         hitMonster(p.damage, m);
         // TODO: generate particles
+    }
+
+    function detonateArea(p, m0){
+        hitMonster(p.damage, m0);
+
+        //TODO: generate lots of particles
+
+        for(let i = 0; i < gameState.monsters.length; i ++){
+            let m = gameState.monsters[i];
+            let dist = Math.sqrt(Math.pow(p.x - m.x,2) + Math.pow(p.x - m.x, 2));
+            if(dist <= p.impactArea && m.type === p.type) {
+                hitMonster(p.collateralDamage, m);
+            }
+        }
+
+
     }
 
     function hitMonster(damage, monster){
@@ -203,40 +327,44 @@ Game = function (graphics) {
             }
 
             //move monster
-            if(m.type === "Ground" ) {
-                let dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
-                if (dist < MONSTER_THRESHOLD) {
 
-
-                    if (m.path.nxt === null) {
-                        //Monster made it to objective, hit board
-                        gameState.lives -= 1;
-                        continue;
-                        //delete monster
-                    }
-                    else {
-                        m.path = m.path.nxt;
-                    }
+            let dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
+            if (dist < MONSTER_THRESHOLD) {
+                if (m.path.nxt === null) {
+                    //Monster made it to objective, hit board
+                    gameState.lives -= 1;
+                    m.reachedDestination = true;
+                    continue;
+                    //delete monster
                 }
-
-                let vector = {
-                    x : m.path.x - m.x,
-                    y : m.path.y - m.y
-                };
-
-                dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
-                vector.x /= dist;
-                vector.y /= dist;
-
-                m.x += vector.x * m.speed;
-                m.y += vector.y * m.speed;
-
-                if(m.health > 0) {
-                    keepers.push(m);
-                } else {
-                    gameState.money += m.value
+                else {
+                    m.path = m.path.nxt;
                 }
             }
+
+            let vector = {
+                x : m.path.x - m.x,
+                y : m.path.y - m.y
+            };
+
+            dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
+            vector.x /= dist;
+            vector.y /= dist;
+
+            m.x += vector.x * m.speed;
+            m.y += vector.y * m.speed;
+
+            if(m.type === "Air"){
+                m.rotation = Math.atan2(vector.y, vector.x);
+            }
+
+
+            if(m.health > 0) {
+                keepers.push(m);
+            } else {
+                gameState.money += m.value
+            }
+
         }
         gameState.monsters = keepers;
     }
@@ -267,7 +395,7 @@ Game = function (graphics) {
                 let minDist = t.range + 1;
                 for(let n = 0; n < gameState.monsters.length; n ++){
                     let newDist = getDistance(t, gameState.monsters[n]);
-                    if(newDist < minDist){
+                    if(newDist < minDist && gameState.monsters[n].type === t.type){
                         minDist = newDist;
                         t.target = gameState.monsters[n];
                     }
@@ -279,7 +407,7 @@ Game = function (graphics) {
                 let angles = getAngle(t.rotation, t.x, t.y, t.target.x, t.target.y);
                 if(angles.angle < TURRET_THRESHOLD){
                     if(t.canfire){
-                        gameState.projectiles.push(Projectile(t.x, t.y, t.rotation, t.projectile));
+                        gameState.projectiles.push(Projectile(t.x, t.y, t.rotation, t.projectile, t.target));
                         t.canfire = false;
                     }
                 }
@@ -576,8 +704,8 @@ Game = function (graphics) {
         Renderer.drawBackground(gameState.tileBoard);
         drawTurrets(elapsedTime);
         drawUITurret(elapsedTime);
-        drawMonsters(elapsedTime);
         drawProjectiles(elapsedTime);
+        drawMonsters(elapsedTime);
         //drawParticles
 
         Renderer.drawLives(gameState.lives);

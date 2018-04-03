@@ -49,30 +49,42 @@ Renderer = function (graphics) {
     function drawMonster(monster) {
 
 
-        graphics.context.save();
-        graphics.context.translate(monster.x - monster.width / 2, monster.y - monster.height / 2);
-        graphics.context.rotate(monster.rotation);
-        graphics.context.translate(-(monster.x - monster.width / 2), -(monster.y - monster.height / 2));
 
+        if(monster.rotation !== undefined){
+            graphics.context.save();
+            graphics.context.translate((monster.x * xScale + monster.width / 2), (monster.y * yScale + monster.height / 2));
+            graphics.context.rotate(monster.rotation + monster.rotationOffset);
+            graphics.context.translate(-(monster.x * xScale + monster.width / 2), -(monster.y * yScale + monster.height / 2));
+        }
 
         graphics.context.drawImage(
             monster.asset,
             monster.width * monster.spriteNum, monster.offY,
             monster.width, monster.height,
-            monster.x * xScale - 3 * monster.width / 4, monster.y * yScale - monster.height,
-            monster.width * 2, monster.height * 2
+            monster.x * xScale - 3 * monster.width / 4, monster.y * yScale -  3 *monster.height / 4,
+            2 * monster.width, 2 * monster.height
         );
 
-        graphics.context.restore();
+
+        if(monster.rotation !== undefined) {
+            graphics.context.restore();
+        }
     }
 
     function drawProjectile(proj) {
+
+        graphics.context.save();
+        graphics.context.translate((proj.x + proj.spec.width / 2) * xScale, (proj.y + proj.spec.height / 2) * yScale);
+        graphics.context.rotate(proj.rotation + proj.spec.rotationOffset);
+        graphics.context.translate(-1 * (proj.x + proj.spec.width / 2) * xScale, -1 * (proj.y + proj.spec.height / 2) * yScale);
 
         graphics.context.drawImage(
             proj.spec.asset,
             proj.x * xScale, proj.y * yScale,
             proj.spec.width * xScale, proj.spec.height * yScale
-        )
+        );
+
+        graphics.context.restore();
     }
 
     function drawTurretTop(turret) {

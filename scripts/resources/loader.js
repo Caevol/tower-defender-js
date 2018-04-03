@@ -59,7 +59,32 @@ MyGame.loader = (function() {
             }, {
                 key : 'upgradeStar',
                 source: '../../assets/turrets/UpgradeStar.png'
+            }, {
+                key : 'littleBomb',
+                source: '../../assets/projectiles/spr_missile.png'
+            }, {
+                key : 'littleBlueBomb',
+                source: '../../assets/projectiles/spr_missile_blue.png'
+            }, {
+                key : 'littleRedBomb',
+                source: '../../assets/projectiles/spr_missile_red.png'
+            }, {
+                key : 'plane',
+                source: '../../assets/monsters/plane.png'
+            }, {
+                key : 'fireballair',
+                source: '../../assets/projectiles/FireBombAir.png'
+            }, {
+                key : 'superLaserTurret',
+                source: '../../assets/turrets/WallTurret-hd.png'
+            }, {
+                key : 'seekingTurret',
+                source: '../../assets/turrets/tank2.png'
+            }, {
+                key : 'seekingMine',
+                source: '../../assets/projectiles/Mine.png'
             }
+
         ]; //no assets yet
 
     //------------------------------------------------------------------

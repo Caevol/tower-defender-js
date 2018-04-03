@@ -28,8 +28,8 @@ level3 = [
 
 level1Waves = [
     [
-        [1000, "mask", 'SIDE'],
-        [1000, "mask", 'SIDE'],
+        [1000, "plane", 'SIDE'],
+        [1000, "plane", 'TOP'],
         [1000, "mask", 'SIDE'],
         [1000, "mask", 'SIDE'],
         [1000, "mask", 'SIDE'],
