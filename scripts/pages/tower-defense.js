@@ -45,28 +45,11 @@ Menu.screens['tower-defense'] =  (function() {
 
         });
 
-        document.getElementById("Upgrade").addEventListener(
-            "click",
-            function() {
-                Game.upgradeSelectedTower();
-            }
-        );
+        document.getElementById("Upgrade").addEventListener("click", Game.upgradeSelectedTower);
 
-        document.getElementById("Sell").addEventListener(
-            "click",
-            function() {
-                Game.sellSelectedTower();
-            }
-        );
+        document.getElementById("Sell").addEventListener("click", Game.sellSelectedTower);
 
-        document.getElementById("next-wave").addEventListener(
-            "click",
-            function() {
-                if(Game.gameState().waveComplete === true) {
-                    Game.gameState().waveComplete = false;
-                    this.disabled = true;
-                }
-            });
+        document.getElementById("next-wave").addEventListener("click", Game.nextWave);
 
         document.getElementById("tower-1").addEventListener(
             "click",

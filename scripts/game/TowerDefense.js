@@ -669,7 +669,16 @@ Game = function (graphics) {
         gameState.turrets.splice(i, 1);
         gameState.turrets.push(t);
 
-        setSelectedTower(t);
+        setSelectedTower(null);
+    }
+
+    function nextWave(){
+        if(gameState.waveComplete === true) {
+            gameState.waveComplete = false;
+            document.getElementById("next-wave").disabled = true;
+            return true;
+        }
+
     }
 
     function sellSelectedTower(){
@@ -785,6 +794,7 @@ Game = function (graphics) {
 
     return {
         BOARD_SIZE: BOARD_SIZE,
+        nextWave: nextWave,
         upgradeSelectedTower: upgradeSelectedTower,
         sellSelectedTower: sellSelectedTower,
         selectTower: selectTower,
