@@ -33,6 +33,9 @@ MyGame.loader = (function() {
                 scripts: ['../utility/PriorityQueue', '../utility/pathfinder', '../utility/angles'],
                 message: 'Utilities loaded',
                 onComplete: null
+            }, {
+                scripts: ['../game/audioPrefabs'],
+                message: 'Audio loaded',
             },  {
                 scripts: ['../game/TowerDefense', '../game/prefabs', '../game/levels', '../game/particleSystem'],
                 message: 'Game State Loaded',
@@ -83,9 +86,24 @@ MyGame.loader = (function() {
             }, {
                 key : 'seekingMine',
                 source: '../../assets/projectiles/Mine.png'
+            }, {
+                key : 'laser',
+                source: '../../assets/audio/laser.wav'
+            }, {
+                key : 'explosion',
+                source: '../../assets/audio/explosion.wav'
+            }, {
+                key : 'death',
+                source: '../../assets/audio/death.wav'
+            }, {
+                key : 'sold',
+                source: '../../assets/audio/sold.wav'
+            }, {
+                key : 'plunk',
+                source: '../../assets/audio/plunk.ogg'
             }
 
-        ]; //no assets yet
+        ];
 
     //------------------------------------------------------------------
     //
@@ -173,7 +191,7 @@ MyGame.loader = (function() {
                 if (xhr.status === 200) {
                     if (fileExtension === 'png' || fileExtension === 'jpg') {
                         asset = new Image();
-                    } else if (fileExtension === 'mp3') {
+                    } else if (fileExtension === 'mp3' || fileExtension === 'wav' || fileExtension === 'ogg') {
                         asset = new Audio();
                     } else {
                         if (onError) { onError('Unknown file extension: ' + fileExtension); }

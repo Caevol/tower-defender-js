@@ -124,6 +124,7 @@ Game = function (graphics) {
 
             gameState.money -= t.purchaseCost;
             Game.gameState().turrets.push(t);
+            Audio.towerPlaced.play();
         }
 
 
@@ -345,6 +346,7 @@ Game = function (graphics) {
             }
         }
 
+        Audio.explosion.play();
 
     }
 
@@ -403,6 +405,7 @@ Game = function (graphics) {
             } else {
                 gameState.score += m.value;
                 gameState.money += m.value;
+                Audio.death.play();
                 ParticleSystem.generateParticles(50, m.x, m.y, m.width / Renderer.xScale, m.height / Renderer.yScale, "red");
                 ParticleSystem.generateTextParticle(m.x, m.y, m.value);
             }
@@ -449,6 +452,7 @@ Game = function (graphics) {
                 let angles = getAngle(t.rotation, t.x, t.y, t.target.x, t.target.y);
                 if(angles.angle < TURRET_THRESHOLD){
                     if(t.canfire){
+                        Audio.weaponFired.play();
                         gameState.projectiles.push(Projectile(t.x, t.y, t.rotation, t.projectile, t.target));
                         t.canfire = false;
                     }
@@ -690,6 +694,7 @@ Game = function (graphics) {
         gameState.turrets.splice(i, 1);
         gameState.turrets.push(t);
 
+        Audio.towerPlaced.play();
         setSelectedTower(null);
     }
 
@@ -714,6 +719,7 @@ Game = function (graphics) {
         deOccupySpaces(gameState.selectedTower);
 
         ParticleSystem.generateParticles(150, gameState.selectedTower.x, gameState.selectedTower.y, gameState.selectedTower.size, gameState.selectedTower.size, 'yellow');
+        Audio.towerSold.play();
         setSelectedTower(null);
 
     }

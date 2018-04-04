@@ -8,6 +8,7 @@ let GameGraphics = function(){
     }
 }();
 
+
 let Menu = function() {
     let screens = {};
     let activeid = "main-menu";
