@@ -52,6 +52,13 @@ Renderer = function (graphics) {
         graphics.context.fillText("Money: " + money, 40, graphics.canvas.height - 100);
     }
 
+    function drawTextParticle(p){
+        graphics.context.fillStyle = p.color;
+        graphics.context.font = "20px Arial";
+        graphics.context.fillText(p.text, p.x * xScale, p.y * yScale);
+    }
+
+
     function drawMonster(monster) {
 
 
@@ -87,6 +94,7 @@ Renderer = function (graphics) {
         graphics.context.strokeRect(monster.x * xScale, monster.y * yScale - monster.height / 2, 60, 10);
 
     }
+
 
     function drawCoverage(tower){
         graphics.context.fillStyle = 'rgba(0, 0, 255, .1)';
@@ -192,6 +200,7 @@ Renderer = function (graphics) {
         yScale: yScale,
         worldxScale: worldxScale,
         worldyScale: worldyScale,
+        drawTextParticle, drawTextParticle,
         drawHealthBar: drawHealthBar,
         drawGrid: drawGrid,
         drawCoverage: drawCoverage,

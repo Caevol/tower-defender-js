@@ -1,7 +1,19 @@
 let ParticleSystem = (function(){
 
     const SHRINK_SPEED = .0003;
+    const FLOAT_SPEED = .005;
     let particles = [];
+    let textParticles = [];
+
+    function TextParticle(x, y, lifetime, text, color){
+        return {
+            x : x,
+            y : y,
+            lifetime: lifetime,
+            text : text,
+            color : color
+        }
+    }
 
     function Particle(x, y, lifetime, velx, vely, angle, angleRotation, size, color, shrink = false){
          return {
@@ -39,10 +51,31 @@ let ParticleSystem = (function(){
             }
         }
         particles = keepers;
+
+         updateTextParticles(elapsedTime);
      }
 
      function resetParticles(){
         particles.length = 0;
+        textParticles.length = 0;
+     }
+
+     function generateTextParticle(x, y, text){
+         let t = TextParticle(x,y, 800, text, 'rgb(255, 239, 213)');
+         textParticles.push(t);
+     }
+
+     function updateTextParticles(elapsedTime){
+         let keepers = [];
+         for(let i = 0; i < textParticles.length; i++){
+             let p = textParticles[i];
+             p.y -= FLOAT_SPEED * elapsedTime;
+             p.lifetime -= elapsedTime;
+             if(p.lifetime > 0){
+                 keepers.push(p);
+             }
+         }
+         textParticles = keepers;
      }
 
      function generateStandingParticle(x, y, color){
@@ -88,9 +121,14 @@ let ParticleSystem = (function(){
          for(let i = 0; i < particles.length; i++){
              Renderer.drawParticle(particles[i]);
          }
+
+         for(let i = 0; i < textParticles.length; i++){
+             Renderer.drawTextParticle(textParticles[i]);
+         }
      }
 
      return {
+         generateTextParticle: generateTextParticle,
          generateStandingParticle: generateStandingParticle,
          resetParticles: resetParticles,
          renderParticles: renderParticles,

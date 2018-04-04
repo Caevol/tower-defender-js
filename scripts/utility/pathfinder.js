@@ -60,14 +60,14 @@ Pathfinder = (function(){
     }
 
     function addPaths(posHeap, visitedPositions, pos, board, endX, endY){
-        addPath(posHeap, visitedPositions, pos, -1, -1, 1.2, board, endX, endY);
+        //addPath(posHeap, visitedPositions, pos, -1, -1, 1.2, board, endX, endY);
         addPath(posHeap, visitedPositions, pos, 0, -1, 1, board, endX, endY);
-        addPath(posHeap, visitedPositions, pos, 1, -1, 1.2, board, endX, endY);
+        //addPath(posHeap, visitedPositions, pos, 1, -1, 1.2, board, endX, endY);
         addPath(posHeap, visitedPositions, pos, -1, 0, 1, board, endX, endY);
         addPath(posHeap, visitedPositions, pos, 1, 0, 1, board, endX, endY);
-        addPath(posHeap, visitedPositions, pos, -1, 1, 1.2, board, endX, endY);
+        //addPath(posHeap, visitedPositions, pos, -1, 1, 1.2, board, endX, endY);
         addPath(posHeap, visitedPositions, pos, 0, 1, 1, board, endX, endY);
-        addPath(posHeap, visitedPositions, pos, 1, 1, 1.2, board, endX, endY);
+        //addPath(posHeap, visitedPositions, pos, 1, 1, 1.2, board, endX, endY);
     }
 
     function addPath(posHeap, visitedPositions, pos, offX, offY, stepOffset, board, endX, endY){

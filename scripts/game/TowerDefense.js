@@ -404,6 +404,7 @@ Game = function (graphics) {
                 gameState.score += m.value;
                 gameState.money += m.value;
                 ParticleSystem.generateParticles(50, m.x, m.y, m.width / Renderer.xScale, m.height / Renderer.yScale, "red");
+                ParticleSystem.generateTextParticle(m.x, m.y, m.value);
             }
 
         }

@@ -247,7 +247,7 @@ let bombTower2 = {
 
     x : 0,
     y : 0,
-    range: 11,
+    range: 18,
     rotation: 0,
     rotationSpeed : .003,
     size : 4,
@@ -285,7 +285,7 @@ let bombTower1 = {
 
     x : 0,
     y : 0,
-    range: 10,
+    range: 15,
     rotation: 0,
     rotationSpeed : .003,
     size : 4,
