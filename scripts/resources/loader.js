@@ -87,6 +87,9 @@ MyGame.loader = (function() {
                 key : 'seekingMine',
                 source: '../../assets/projectiles/Mine.png'
             }, {
+                key : 'background',
+                source: '../../assets/landscape/scifitiles-sheet.png'
+            }, {
                 key : 'laser',
                 source: '../../assets/audio/laser.wav'
             }, {

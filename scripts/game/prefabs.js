@@ -1,3 +1,11 @@
+let background = {
+    travBackground : {x: 191, y: 31},
+    deadBackground : {x: 127, y: 0},
+    width : 33,
+    height: 33,
+    backAsset : MyGame.assets['background']
+};
+
 let maskCreep = {
 
     //SPEC INFO
@@ -66,7 +74,6 @@ let flyingCreep = {
     health : 350,
     value : 50
 };
-
 
 let scifiturret3 = {
     //SAFE TO BAD COPY

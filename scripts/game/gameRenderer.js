@@ -1,10 +1,12 @@
 Renderer = function (graphics) {
 
-    let xScale = graphics.canvas.width / Game.BOARD_SIZE;
-    let yScale = graphics.canvas.height / Game.BOARD_SIZE;
+    const xScale = graphics.canvas.width / Game.BOARD_SIZE;
+    const yScale = graphics.canvas.height / Game.BOARD_SIZE;
 
-    let worldxScale = parseInt(document.getElementById("tower-game").style.width) / 50;
-    let worldyScale = parseInt(document.getElementById("tower-game").style.height) / 50;
+    const worldxScale = parseInt(document.getElementById("tower-game").style.width) / 50;
+    const worldyScale = parseInt(document.getElementById("tower-game").style.height) / 50;
+
+
 
 
     function clear() {
@@ -185,6 +187,28 @@ Renderer = function (graphics) {
         }
     }
 
+    function drawGoodBackground(board){
+        graphics.context.opacity = 1.0;
+        graphics.context.fillStyle = 'rgba(255, 255, 255, 1.0)';
+        for (let y = 0; y < board.length / 2; y++) {
+            for (let x = 0; x < board[y].length / 2; x++) {
+            graphics.context.drawImage(background.backAsset, background.travBackground.x,
+            background.travBackground.y, background.width,
+            background.height, 2*x * xScale, 2*y * yScale, 2*xScale, 2*yScale);
+            }
+        }
+
+        for (let y = 0; y < board.length; y++) {
+            for (let x = 0; x < board[y].length; x++) {
+                if(board[y][x].occupied === true) {
+                    graphics.context.drawImage(background.backAsset, background.deadBackground.x,
+                        background.deadBackground.y, background.width / 2,
+                        background.height / 2, x * xScale, y * yScale, xScale, yScale);
+                }
+            }
+        }
+    }
+
     function drawParticle(p){
         graphics.context.save();
         graphics.context.translate((p.x + p.size / 2) * xScale, (p.y + p.size / 2) * yScale);
@@ -215,7 +239,7 @@ Renderer = function (graphics) {
         drawTurretTop: drawTurretTop,
         drawTurretUpgrade: drawTurretUpgrade,
         drawTurretBase: drawTurretBase,
-        drawBackground: drawBadBackground,
+        drawBackground: drawGoodBackground,
         drawProjectile: drawProjectile
     }
 }(GameGraphics);
