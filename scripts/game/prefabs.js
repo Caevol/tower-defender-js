@@ -16,6 +16,7 @@ let maskCreep = {
     y : 0,
     speed : .07,
     path : null,
+    maxHealth : 100,
     health : 100,
     value : 10
 };
@@ -37,6 +38,7 @@ let greenWalkingCreep = {
     y : 0,
     speed : .03,
     path : null,
+    maxHealth: 250,
     health : 250,
     value : 25
 };
@@ -60,6 +62,7 @@ let flyingCreep = {
     y : 0,
     speed : .05,
     path : null,
+    maxHealth: 350,
     health : 350,
     value : 50
 };

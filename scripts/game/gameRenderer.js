@@ -77,6 +77,17 @@ Renderer = function (graphics) {
         }
     }
 
+    function drawHealthBar(monster){
+        graphics.context.strokeStyle = 'rgba(0, 0, 0, 1)';
+        let redColor = Math.round((1 - (monster.health / monster.maxHealth)) * 255);
+        let greenColor = Math.round((monster.health / monster.maxHealth) * 255);
+        graphics.context.fillStyle = 'rgba(' + redColor + ', ' + greenColor + ', 0,1)';
+
+        graphics.context.fillRect(monster.x * xScale, monster.y * yScale - monster.height / 2, (monster.health / monster.maxHealth) * 60, 10);
+        graphics.context.strokeRect(monster.x * xScale, monster.y * yScale - monster.height / 2, 60, 10);
+
+    }
+
     function drawCoverage(tower){
         graphics.context.fillStyle = 'rgba(0, 0, 255, .1)';
         graphics.context.beginPath();
@@ -181,6 +192,7 @@ Renderer = function (graphics) {
         yScale: yScale,
         worldxScale: worldxScale,
         worldyScale: worldyScale,
+        drawHealthBar: drawHealthBar,
         drawGrid: drawGrid,
         drawCoverage: drawCoverage,
         drawMoney: drawMoney,

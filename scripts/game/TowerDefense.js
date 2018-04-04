@@ -788,6 +788,20 @@ Game = function (graphics) {
 
     }
 
+    function drawCoverages(){
+        if(settings.showCoverage){
+            for(let i = 0; i < gameState.turrets.length; i++){
+                Renderer.drawCoverage(gameState.turrets[i]);
+            }
+        }
+    }
+
+    function drawHealthBars(){
+        for(let i = 0; i < gameState.monsters.length; i++){
+            Renderer.drawHealthBar(gameState.monsters[i]);
+        }
+    }
+
     function render(elapsedTime) {
         Renderer.clear();
         Renderer.drawBackground(gameState.tileBoard);
@@ -797,12 +811,9 @@ Game = function (graphics) {
 
         drawProjectiles(elapsedTime);
         drawMonsters(elapsedTime);
+        drawHealthBars();
 
-        if(settings.showCoverage){
-            for(let i = 0; i < gameState.turrets.length; i++){
-                Renderer.drawCoverage(gameState.turrets[i]);
-            }
-        }
+        drawCoverages();
         if(settings.showGrid){
             Renderer.drawGrid(gameState.tileBoard);
         }
