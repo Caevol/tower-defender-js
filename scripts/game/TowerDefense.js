@@ -449,7 +449,7 @@ Game = function (graphics) {
 
             //turn towards and fire on target
             if(t.target !== null){
-                let angles = getAngle(t.rotation, t.x, t.y, t.target.x, t.target.y);
+                let angles = getAngle(t.rotation, t.x + t.size / 2, t.y + t.size / 2, t.target.x, t.target.y);
                 if(angles.angle < TURRET_THRESHOLD){
                     if(t.canfire){
                         Audio.weaponFired.play();
