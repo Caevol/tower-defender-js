@@ -40,6 +40,12 @@ Renderer = function (graphics) {
         graphics.context.fillText("Lives: " + lives, 40, graphics.canvas.height - 50);
     }
 
+    function drawScore(score) {
+        graphics.context.font = "40px Arial";
+        graphics.context.fillStyle = 'rgba(255, 255, 255, 1)';
+        graphics.context.fillText("Score: " + score, 40, graphics.canvas.height - 150);
+    }
+
     function drawMoney(money) {
         graphics.context.font = "40px Arial";
         graphics.context.fillStyle = 'rgba(255, 255, 255, 1)';
@@ -140,6 +146,16 @@ Renderer = function (graphics) {
         }
     }
 
+    function drawParticle(p){
+        graphics.context.save();
+        graphics.context.translate((p.x + p.size / 2) * xScale, (p.y + p.size / 2) * yScale);
+        graphics.context.rotate(p.angle);
+        graphics.context.translate(-1 * (p.x  + p.size / 2) * xScale, -1 * (p.y + p.size / 2) * yScale);
+        graphics.context.fillStyle = p.color;
+        graphics.context.fillRect(p.x * xScale, p.y * yScale, p.size * xScale, p.size* yScale);
+        graphics.context.restore();
+    }
+
     return {
         xScale: xScale,
         yScale: yScale,
@@ -148,6 +164,8 @@ Renderer = function (graphics) {
         drawMoney: drawMoney,
         drawLives: drawLives,
         clear: clear,
+        drawParticle: drawParticle,
+        drawScore: drawScore,
         drawTmpTurret: drawTmpTurret,
         drawTurretRadius: drawTurretRadius,
         drawMonster: drawMonster,

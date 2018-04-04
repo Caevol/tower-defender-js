@@ -34,7 +34,7 @@ MyGame.loader = (function() {
                 message: 'Utilities loaded',
                 onComplete: null
             },  {
-                scripts: ['../game/TowerDefense', '../game/prefabs', '../game/levels'],
+                scripts: ['../game/TowerDefense', '../game/prefabs', '../game/levels', '../game/particleSystem'],
                 message: 'Game State Loaded',
                 onComplete: null
             }, {

@@ -313,25 +313,24 @@ let linearAirTurret3 = {
 
     //INTERIOR
     canfire : true,
-    cooldown : 500,
+    cooldown : 100,
     cooldownRemaining : 0,
     target : null,
     //END INTERIOR
 
     x : 0,
     y : 0,
-    range: 10,
+    range: 15,
     rotation: 0,
-    rotationSpeed : .0025,
+    rotationSpeed : .004,
     size : 3,
     upgradeCost : null,
-    sellval : 25,
+    sellval : 150,
     purchaseCost : 0,
     projectile: "fireballAir",
     upgradeLevel : 2,
     upgradeTower : null
 };
-
 
 let linearAirTurret2 = {
     //SAFE TO BAD COPY
@@ -352,20 +351,20 @@ let linearAirTurret2 = {
 
     //INTERIOR
     canfire : true,
-    cooldown : 500,
+    cooldown : 200,
     cooldownRemaining : 0,
     target : null,
     //END INTERIOR
 
     x : 0,
     y : 0,
-    range: 10,
+    range: 13,
     rotation: 0,
-    rotationSpeed : .0025,
+    rotationSpeed : .003,
     size : 3,
-    upgradeCost : 50,
-    sellval : 25,
-    purchaseCost : 30,
+    upgradeCost : 100,
+    sellval : 70,
+    purchaseCost : 0,
     projectile: "fireballAir",
     upgradeLevel : 1,
     upgradeTower : "linearair3"
@@ -428,14 +427,14 @@ let seekingAirTurret3 = {
 
     //INTERIOR
     canfire : true,
-    cooldown : 500,
+    cooldown : 800,
     cooldownRemaining : 0,
     target : null,
     //END INTERIOR
 
     x : 0,
     y : 0,
-    range: 10,
+    range: 20,
     rotation: 0,
     rotationSpeed : .0025,
     size : 3,
@@ -466,14 +465,14 @@ let seekingAirTurret2 = {
 
     //INTERIOR
     canfire : true,
-    cooldown : 500,
+    cooldown : 1000,
     cooldownRemaining : 0,
     target : null,
     //END INTERIOR
 
     x : 0,
     y : 0,
-    range: 10,
+    range: 15,
     rotation: 0,
     rotationSpeed : .0025,
     size : 3,
@@ -504,7 +503,7 @@ let seekingAirTurret1 = {
 
     //INTERIOR
     canfire : true,
-    cooldown : 500,
+    cooldown : 1200,
     cooldownRemaining : 0,
     target : null,
     //END INTERIOR
@@ -533,12 +532,17 @@ let seekingMine = {
 
     type: "Air",
 
+    detonation: true,
+    dropsTrail : true,
+    dropRate: 50,
+    dropTime: 0,
+
     x: 0,
     y: 0,
     velX : 0,
     velY : 0,
     rotation: 0,
-    speed: .0005,
+    speed: .0002,
     damage: 45,
     radius: 3,
 
@@ -599,6 +603,11 @@ let bombball = {
     },
 
     type: "Ground",
+
+    dropsTrail : true,
+    dropRate: 150,
+    dropTime: 0,
+
     x: 0,
     y: 0,
     rotation: 0,
@@ -622,6 +631,11 @@ let bombballRed = {
     },
 
     type: "Ground",
+
+    dropsTrail : true,
+    dropRate: 150,
+    dropTime: 0,
+
     x: 0,
     y: 0,
     rotation: 0,
@@ -645,6 +659,11 @@ let bombballBlue = {
     },
 
     type: "Ground",
+
+    dropsTrail : true,
+    dropRate: 150,
+    dropTime: 0,
+
     x: 0,
     y: 0,
     rotation: 0,

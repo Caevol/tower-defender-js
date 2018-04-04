@@ -259,6 +259,13 @@ Game = function (graphics) {
             return false;
         }
 
+        if(p.dropsTrail === true){
+            p.dropTime -= elapsedTime;
+            if(p.dropTime < 0){
+                p.dropTime = p.dropRate;
+                ParticleSystem.generateStandingParticle(p.x + (p.spec.width / 2), p.y + (p.spec.height / 2), 'rgba(0, 0, 255, .5)');
+            }
+        }
         return true;
     }
 
@@ -281,22 +288,34 @@ Game = function (graphics) {
             let m = gameState.monsters[n];
             let dist = Math.sqrt(Math.pow(m.x - p.x,2) + Math.pow(m.y - p.y,2));
             if(dist <= p.radius && m.type === p.type) {
+                ParticleSystem.generateParticles(60, p.x - p.impactArea / 2, p.y - p.impactArea / 2, p.impactArea, p.impactArea, "orange");
                 p.detonate(p, m);
                 return false;
             }
         }
+
+        if(p.dropsTrail === true){
+            p.dropTime -= elapsedTime;
+            if(p.dropTime < 0){
+                p.dropTime = p.dropRate;
+                ParticleSystem.generateStandingParticle(p.x, p.y, "rgba(0, 0, 255, .5)");
+            }
+        }
+
         return true;
     }
 
     function detonateSingleTarget(p, m){
         hitMonster(p.damage, m);
-        // TODO: generate particles
+
+        if(p.detonation === true){
+            ParticleSystem.generateParticles(80, p.x, p.y, p.radius, p.radius, 'yellow');
+        }
+
     }
 
     function detonateArea(p, m0){
         hitMonster(p.damage, m0);
-
-        //TODO: generate lots of particles
 
         for(let i = 0; i < gameState.monsters.length; i ++){
             let m = gameState.monsters[i];
@@ -362,7 +381,9 @@ Game = function (graphics) {
             if(m.health > 0) {
                 keepers.push(m);
             } else {
-                gameState.money += m.value
+                gameState.score += m.value;
+                gameState.money += m.value;
+                ParticleSystem.generateParticles(50, m.x, m.y, m.width / Renderer.xScale, m.height / Renderer.yScale, "red");
             }
 
         }
@@ -384,7 +405,7 @@ Game = function (graphics) {
                 }
             }
 
-            if(t.target !== null && getDistance(t, t.target) > t.range) {
+            if(t.target !== null && (getDistance(t, t.target) > t.range || t.target.reachedDestination === true || t.target.health <= 0)) {
                 t.target = null;
             }
 
@@ -468,7 +489,25 @@ Game = function (graphics) {
         return tileBoard;
     }
 
-    function rebuildGame(level = 1) {
+    function gameOver(){
+        if(gameState.lives <= 0){
+            console.log("DEFEAT");
+        }
+        else {
+            console.log("VICTORY");
+        }
+
+        endGame();
+        Menu.showScreen('score-screen');
+    }
+
+    function rebuildGame(level = 1, score = 0) {
+
+        if(level > 3){
+            gameOver();
+            return;
+        }
+
         gameState = {
             curMouseX : -1,
             curMouseY : -1,
@@ -487,11 +526,28 @@ Game = function (graphics) {
             projectiles: [],
             money: 150,
             lives: 100,
+            score: score,
             waveComplete: true,
             tileBoard: TileBoard(BOARD_SIZE, BOARD_SIZE),
             continueGame: true,
             prevTime: performance.now(),
         };
+
+        switch(level){
+            case 1:
+                gameState.money = 200;
+                break;
+            case 2:
+                gameState.money = 300;
+                break;
+            case 3:
+                gameState.money = 400;
+                break;
+        }
+
+        ParticleSystem.resetParticles();
+
+        setSelectedTower(null);
 
         setLevel(gameState);
 
@@ -529,14 +585,16 @@ Game = function (graphics) {
         if(gameState.waveMonster === gameState.levelWaves[gameState.wave].length && gameState.monsters.length === 0){
             gameState.waveComplete = true;
             document.getElementById("next-wave").disabled = false;
-            gameState.wave += 1;
+            gameState.wave ++;
             gameState.projectiles.length = 0;
             gameState.waveMonster = 0;
             gameState.waveElapsedTime = 0;
+            gameState.score += 50;
 
             if(gameState.wave >= gameState.levelWaves.length){
+                gameState.score += 100;
                 gameState.level ++;
-                rebuildGame(gameState.level);
+                rebuildGame(gameState.level, gameState.score);
             }
             return;
         }
@@ -599,7 +657,7 @@ Game = function (graphics) {
     }
 
     function upgradeSelectedTower(){
-        if(gameState.selectedTower === null || gameState.selectedTower.upgradeTower === null || gameState.money - gameState.selectedTower.purchaseCost < 0){
+        if(gameState.selectedTower === null || gameState.selectedTower.upgradeTower === null || gameState.money - gameState.selectedTower.upgradeCost < 0){
             return;
         }
 
@@ -625,7 +683,9 @@ Game = function (graphics) {
         gameState.turrets.splice(i, 1);
         deOccupySpaces(gameState.selectedTower);
 
+        ParticleSystem.generateParticles(150, gameState.selectedTower.x, gameState.selectedTower.y, gameState.selectedTower.size, gameState.selectedTower.size, 'yellow');
         setSelectedTower(null);
+
     }
 
     function selectTower(x, y){
@@ -708,8 +768,11 @@ Game = function (graphics) {
         drawMonsters(elapsedTime);
         //drawParticles
 
+        ParticleSystem.renderParticles();
+
         Renderer.drawLives(gameState.lives);
         Renderer.drawMoney(gameState.money);
+        Renderer.drawScore(gameState.score);
     }
 
     function update(elapsedTime) {
@@ -717,7 +780,7 @@ Game = function (graphics) {
         updateTowers(elapsedTime);
         updateProjectiles(elapsedTime);
         updateMonsters(elapsedTime);
-        //update particles
+        ParticleSystem.updateParticles(elapsedTime);
     }
 
     return {
