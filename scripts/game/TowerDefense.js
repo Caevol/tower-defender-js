@@ -8,6 +8,14 @@ Game = function (graphics) {
     const TURRET_THRESHOLD = .1;
     const MISSILE_MAX_SPEED = 2;
     let gameState = {};
+    let settings = {
+        showCoverage : true,
+        showGrid: true,
+    };
+
+    settings.showGrid = JSON.parse(localStorage.showGrid);
+    settings.showCoverage = JSON.parse(localStorage.showCoverage);
+
     const BACKGROUND = [];
     const FORBIDDEN = [[0, 23], [0, 24], [0, 25], [0, 26],
             [23, 0], [24, 0], [25, 0], [26, 0],
@@ -16,7 +24,19 @@ Game = function (graphics) {
         ];
 
 
-        function Monster(startX, startY, endX, endY, creepType){
+    function toggleGrid(){
+        let toggle = !settings.showGrid;
+        settings.showGrid = toggle;
+        localStorage.showGrid = toggle;
+    }
+
+    function toggleCoverage(){
+        let toggle = !settings.showCoverage;
+        settings.showCoverage = toggle;
+        localStorage.showCoverage = toggle;
+    }
+
+    function Monster(startX, startY, endX, endY, creepType){
         let m = {};
         switch(creepType){
             case "mask":
@@ -773,9 +793,21 @@ Game = function (graphics) {
         Renderer.drawBackground(gameState.tileBoard);
         drawTurrets(elapsedTime);
         drawUITurret(elapsedTime);
+
+
         drawProjectiles(elapsedTime);
         drawMonsters(elapsedTime);
-        //drawParticles
+
+        if(settings.showCoverage){
+            for(let i = 0; i < gameState.turrets.length; i++){
+                Renderer.drawCoverage(gameState.turrets[i]);
+            }
+        }
+        if(settings.showGrid){
+            Renderer.drawGrid(gameState.tileBoard);
+        }
+
+
 
         ParticleSystem.renderParticles();
 
@@ -794,6 +826,9 @@ Game = function (graphics) {
 
     return {
         BOARD_SIZE: BOARD_SIZE,
+        toggleCoverage: toggleCoverage,
+        toggleGrid: toggleGrid,
+        settings: settings,
         nextWave: nextWave,
         upgradeSelectedTower: upgradeSelectedTower,
         sellSelectedTower: sellSelectedTower,

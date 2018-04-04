@@ -77,6 +77,26 @@ Renderer = function (graphics) {
         }
     }
 
+    function drawCoverage(tower){
+        graphics.context.fillStyle = 'rgba(0, 0, 255, .1)';
+        graphics.context.beginPath();
+        graphics.context.arc((tower.x + tower.size / 2) * xScale, (tower.y + tower.size / 2) * yScale, tower.range * xScale, 0, Math.PI * 2);
+        graphics.context.fill();
+    }
+
+    function drawGrid(board){
+        graphics.context.strokeStyle = 'rgba(0, 0, 0, .3)';
+        graphics.context.fillStyle = 'rgba(0, 0, 0, .3)';
+        graphics.context.beginPath();
+        for(let i = 0; i <= board.length; i++){
+            graphics.context.moveTo(0, i * yScale);
+            graphics.context.lineTo(graphics.canvas.width, i * yScale);
+            graphics.context.moveTo(i * xScale, 0);
+            graphics.context.lineTo(i * xScale, graphics.canvas.height);
+        }
+        graphics.context.stroke();
+    }
+
     function drawProjectile(proj) {
 
         graphics.context.save();
@@ -161,6 +181,8 @@ Renderer = function (graphics) {
         yScale: yScale,
         worldxScale: worldxScale,
         worldyScale: worldyScale,
+        drawGrid: drawGrid,
+        drawCoverage: drawCoverage,
         drawMoney: drawMoney,
         drawLives: drawLives,
         clear: clear,
