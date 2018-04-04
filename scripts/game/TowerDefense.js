@@ -453,7 +453,9 @@ Game = function (graphics) {
                 if(angles.angle < TURRET_THRESHOLD){
                     if(t.canfire){
                         Audio.weaponFired.play();
-                        gameState.projectiles.push(Projectile(t.x, t.y, t.rotation, t.projectile, t.target));
+                        let xPos = t.x + t.size / 2 + (Math.cos(t.rotation) * t.size / 3);
+                        let yPos = t.y + t.size / 2 + (Math.sin(t.rotation) * t.size / 3);
+                        gameState.projectiles.push(Projectile(xPos, yPos, t.rotation, t.projectile, t.target));
                         t.canfire = false;
                     }
                 }

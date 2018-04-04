@@ -190,14 +190,13 @@ Renderer = function (graphics) {
     function drawGoodBackground(board){
         graphics.context.opacity = 1.0;
         graphics.context.fillStyle = 'rgba(255, 255, 255, 1.0)';
-        for (let y = 0; y < board.length / 2; y++) {
-            for (let x = 0; x < board[y].length / 2; x++) {
+        for (let y = 0; y <= board.length / 2; y++) {
+            for (let x = 0; x <= board[y].length / 2; x++) {
             graphics.context.drawImage(background.backAsset, background.travBackground.x,
             background.travBackground.y, background.width,
-            background.height, 2*x * xScale, 2*y * yScale, 2*xScale, 2*yScale);
+            background.height, (2*x - 1) * xScale, (2*y - 1) * yScale, 2*xScale, 2*yScale);
             }
         }
-
         for (let y = 0; y < board.length; y++) {
             for (let x = 0; x < board[y].length; x++) {
                 if(board[y][x].occupied === true) {
@@ -207,6 +206,7 @@ Renderer = function (graphics) {
                 }
             }
         }
+
     }
 
     function drawParticle(p){
