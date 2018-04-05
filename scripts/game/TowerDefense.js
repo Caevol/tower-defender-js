@@ -13,9 +13,12 @@ Game = function (graphics) {
         showGrid: true,
     };
 
-    settings.showGrid = JSON.parse(localStorage.showGrid);
-    settings.showCoverage = JSON.parse(localStorage.showCoverage);
-
+	if(localStorage.showGrid !== undefined){
+		settings.showGrid = JSON.parse(localStorage.showGrid);
+	}
+	if(localStorage.showCoverage !== undefined){
+		settings.showCoverage = JSON.parse(localStorage.showCoverage);
+	}
     const BACKGROUND = [];
     const FORBIDDEN = [[0, 23], [0, 24], [0, 25], [0, 26],
             [23, 0], [24, 0], [25, 0], [26, 0],

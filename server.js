@@ -8,7 +8,9 @@ let mimeTypes = {
     '.css' : 'text/css',
     '.png' : 'image/png',
     '.jpg' : 'image/jpeg',
-    '.mp3' : 'audio/mpeg3'
+    '.mp3' : 'audio/mpeg3',
+	'.wav' : 'audio/wav',
+	'.ogg' : 'audio/ogg'
 };
 
 function handleRequest(request, response) {
