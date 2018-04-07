@@ -25,8 +25,8 @@ let Menu = function() {
         let inactive = document.getElementById(activeid);
         inactive.style.display = "none";
         document.getElementById(id).style.display = "block";
-        screens[id].run();
         activeid = id;
+        screens[id].run();
     }
 
 

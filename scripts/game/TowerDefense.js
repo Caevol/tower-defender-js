@@ -375,8 +375,13 @@ Game = function (graphics) {
             let dist = Math.sqrt(Math.pow(m.path.x - m.x, 2) + Math.pow(m.path.y - m.y, 2));
             if (dist < MONSTER_THRESHOLD) {
                 if (m.path.nxt === null) {
+
                     //Monster made it to objective, hit board
                     gameState.lives -= 1;
+                    if(gameState.lives <= 0){
+                        gameOver();
+                        return;
+                    }
                     m.reachedDestination = true;
                     continue;
                     //delete monster
@@ -520,13 +525,10 @@ Game = function (graphics) {
     }
 
     function gameOver(){
-        if(gameState.lives <= 0){
-            console.log("DEFEAT");
+        gameState.score += gameState.money;
+        for(let i = 0; i < gameState.turrets.length; i ++){
+            gameState.score += gameState.turrets[i].sellval;
         }
-        else {
-            console.log("VICTORY");
-        }
-
         endGame();
         Menu.showScreen('score-screen');
     }
@@ -555,7 +557,7 @@ Game = function (graphics) {
             turrets: [],
             projectiles: [],
             money: 150,
-            lives: 100,
+            lives: 10,
             score: score,
             waveComplete: true,
             tileBoard: TileBoard(BOARD_SIZE, BOARD_SIZE),
@@ -624,6 +626,11 @@ Game = function (graphics) {
             if(gameState.wave >= gameState.levelWaves.length){
                 gameState.score += 100;
                 gameState.level ++;
+                gameState.score += gameState.money;
+                for(let i = 0; i < gameState.turrets.length; i++){
+                    gameState.score += gameState.turrets[i].sellval;
+                }
+
                 rebuildGame(gameState.level, gameState.score);
             }
             return;
@@ -817,6 +824,8 @@ Game = function (graphics) {
     function render(elapsedTime) {
         Renderer.clear();
         Renderer.drawBackground(gameState.tileBoard);
+        drawCoverages();
+
         drawTurrets(elapsedTime);
         drawUITurret(elapsedTime);
 
@@ -825,7 +834,6 @@ Game = function (graphics) {
         drawMonsters(elapsedTime);
         drawHealthBars();
 
-        drawCoverages();
         if(settings.showGrid){
             Renderer.drawGrid(gameState.tileBoard);
         }
@@ -840,6 +848,7 @@ Game = function (graphics) {
     }
 
     function update(elapsedTime) {
+
         updateLevel(elapsedTime);
         updateTowers(elapsedTime);
         updateProjectiles(elapsedTime);

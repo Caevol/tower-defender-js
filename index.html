@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Tower Defense Game!</title>
+
+    <script src = "/node_modules/socket.io-client/dist/socket.io.slim.js"></script>
+    <link rel = "stylesheet" type = "text/css" href = "scripts/styles.css">
 </head>
 <body>
 
@@ -10,7 +13,16 @@
     <button id = "new-game">New Game</button> <br>
     <button id = "credits-page">Credits</button> <br>
     <button id = "high-scores-page">High Scores</button> <br>
-    <button id = "options-page">Options</button>
+    <button id = "options-page">Options</button> <br>
+    <button id = "readme-page">Gameplay </button>
+</div>
+
+<div id = "readme" class = "screen" style = "width: 900px; height: 900px; display: none;">
+    This tower defense game features 3 levels, each of which feature 3 waves. Do your best to complete every wave! <br>
+    To purchase a tower, press its tower button and place it using the mouse. To stop placing, press the same tower button again. <br>
+    You can select and upgrade towers by clicking on one of your placed towers as long as you are not in purchase mode. <br>
+    Note: You can exit the game early using ESC, but doing this will not send your score to the server! <br>
+    <button id = "readme-back">Back</button>
 </div>
 
 <div id = "options" class = "screen" style = "width: 900px; height: 900px; display: none;">
@@ -34,7 +46,6 @@
 
 <div id = "high-scores" class = "screen" style = "width: 900px; height: 900px; display: none;">
     <h1><div id = "high-scores-list"></div></h1>
-    <button id="reset-scores">Reset Scores</button>
     <button id = "back-button-scores">Back</button>
 </div>
 
@@ -56,19 +67,21 @@
 </div>
 
 <div id = "tower-defense" class = "screen" style = "width: 900px; height: 900px; display: none">
-    <div id = "tower-ui">
+    <div id = "tower-ui" style = "padding:5px">
         <button id = "Upgrade">Upgrade</button>
         <button id = "Sell">Sell</button>
-        <button id = "tower-1">Tower 1</button>
-        <button id = "tower-2">Tower 2</button>
-        <button id = "tower-3">Tower 3</button>
-        <button id = "tower-4">Tower 4</button>
+        <button id = "tower-1">Ground: 30</button>
+        <button id = "tower-2">Bomb: 50</button>
+        <button id = "tower-3">Air: 20</button>
+        <button id = "tower-4">Seeking: 40</button>
         <button id = "next-wave">Start Next Wave</button>
     </div>
-    <canvas id ="tower-game" class = "screen" width = "1500" height = "1500" style = "width: 900px; height: 900px">
+    <canvas id ="tower-game" class = "screen" width = "1500" height = "1500" style = "width: 800px; height: 800px">
 
     </canvas>
 </div>
+
+<div id = "score-screen" class = "screen"></div>
 
 </body>
 

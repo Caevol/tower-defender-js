@@ -26,7 +26,7 @@ MyGame.loader = (function() {
                 message: 'Input loaded',
                 onComplete: null
             }, {
-                scripts: ['../pages/tower-defense', '../pages/options', '../pages/credits', '../pages/game-options', '../pages/high-scores', '../pages/keybindings', '../pages/main-menu'],
+                scripts: ['../pages/tower-defense', '../pages/options', '../pages/credits', '../pages/game-options', '../pages/high-scores', '../pages/keybindings', '../pages/main-menu', '../pages/score-screen', '../pages/readme'],
                 message: 'Page scripts loaded',
                 onComplete: null,
             }, {

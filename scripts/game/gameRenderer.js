@@ -25,10 +25,10 @@ Renderer = function (graphics) {
 
     function drawTurretRadius(t, canPlace) {
         if (canPlace === true) {
-            graphics.context.fillStyle = 'rgba(0, 0, 255, .3)';
+            graphics.context.fillStyle = 'rgba(0, 0, 255, .1)';
         }
         else {
-            graphics.context.fillStyle = 'rgba(255, 0, 0, .3)';
+            graphics.context.fillStyle = 'rgba(255, 0, 0, .1)';
         }
         graphics.context.beginPath();
         graphics.context.arc((t.x + t.size / 2) * xScale, (t.y + t.size / 2) * yScale, (t.range) * xScale, 0, Math.PI * 2);
@@ -56,7 +56,7 @@ Renderer = function (graphics) {
 
     function drawTextParticle(p){
         graphics.context.fillStyle = p.color;
-        graphics.context.font = "20px Arial";
+        graphics.context.font = "25px Arial";
         graphics.context.fillText(p.text, p.x * xScale, p.y * yScale);
     }
 
@@ -99,7 +99,7 @@ Renderer = function (graphics) {
 
 
     function drawCoverage(tower){
-        graphics.context.fillStyle = 'rgba(0, 0, 255, .1)';
+        graphics.context.fillStyle = 'rgba(0, 0, 255, .05)';
         graphics.context.beginPath();
         graphics.context.arc((tower.x + tower.size / 2) * xScale, (tower.y + tower.size / 2) * yScale, tower.range * xScale, 0, Math.PI * 2);
         graphics.context.fill();

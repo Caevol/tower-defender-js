@@ -18,6 +18,12 @@ Menu.screens['main-menu'] = (function() {
             'click',
             function() { Menu.showScreen('options'); });
 
+        document.getElementById('readme-page').addEventListener(
+            'click',
+            function() {
+                Menu.showScreen('readme');
+            }
+        );
     }
 
     function run() {

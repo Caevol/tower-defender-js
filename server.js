@@ -37,6 +37,26 @@ function handleRequest(request, response) {
 }
 
 let server = http.createServer(handleRequest);
+let io = require('socket.io')(server);
+
+let scores = [0, 0, 0, 0, 0];
+
+io.on('connection', function(socket){
+    console.log('Connection established');
+
+    socket.on('score', function(data){
+        console.log("New score " + data.score);
+        scores.push(data.score);
+        scores = scores.sort(function (a, b) {  return -1 *(a - b);  });
+        scores.pop();
+    });
+
+    socket.on('getScores', function(data){
+        socket.emit('scoreResult', { scores: scores });
+    });
+
+});
+
 
 server.listen(3000, function() {
     console.log('Server listening on port 3000');

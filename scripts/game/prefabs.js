@@ -412,7 +412,7 @@ let linearAirTurret1 = {
     size : 3,
     upgradeCost : 50,
     sellval : 25,
-    purchaseCost : 30,
+    purchaseCost : 20,
     projectile: "fireballAir",
     upgradeLevel : 0,
     upgradeTower : "linearair2"
@@ -486,7 +486,7 @@ let seekingAirTurret2 = {
     rotation: 0,
     rotationSpeed : .0025,
     size : 3,
-    upgradeCost : 50,
+    upgradeCost : 90,
     sellval : 25,
     purchaseCost : 30,
     projectile: "seekingAirMine",
@@ -526,7 +526,7 @@ let seekingAirTurret1 = {
     size : 3,
     upgradeCost : 50,
     sellval : 25,
-    purchaseCost : 30,
+    purchaseCost : 40,
     projectile: "seekingAirMine",
     upgradeLevel : 0,
     upgradeTower : "seekingAir2"
@@ -651,7 +651,7 @@ let bombballRed = {
     rotation: 0,
     speed: .035,
     damage: 35,
-    collateralDamage: 13,
+    collateralDamage: 20,
     impactArea : 6,
     radius: 2.5,
 
@@ -679,7 +679,7 @@ let bombballBlue = {
     rotation: 0,
     speed: .025,
     damage: 25,
-    collateralDamage: 10,
+    collateralDamage: 14,
     impactArea : 5,
     radius: 2,
 
